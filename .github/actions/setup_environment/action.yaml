@@ -1,0 +1,27 @@
+name: "Setup Environment"
+description: "Setting environment for the project"
+
+inputs:
+  task-version:
+    description: "Task version"
+    required: true
+    default: "3.33.1"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install Task
+      uses: arduino/setup-task@v1
+      with:
+        version: ${{ inputs.task-version }}
+
+    - name: Install Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.12"
+
+    - name: Install Cookiecutter
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        pip install cookiecutter
