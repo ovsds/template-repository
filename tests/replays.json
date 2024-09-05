@@ -1,0 +1,12 @@
+{
+  "default_parameters": {
+    "project_name": "Test Project Name",
+    "project_slug": "test-project-name"
+  },
+  "replays": [
+    {
+      "name": "Default",
+      "parameters": {}
+    }
+  ]
+}

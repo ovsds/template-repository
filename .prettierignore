@@ -1,0 +1,5 @@
+# Template sources
+{{cookiecutter.project_slug}}/
+
+# Test results
+.test_results/
