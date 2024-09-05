@@ -14,14 +14,11 @@ tasks:
   _with_nvm:
     internal: true
     cmds:
-      - "source ${HOME}/.nvm/nvm.sh && nvm use && {{ "{{" }}.COMMAND}}"
+      - "source ${HOME}/.nvm/nvm.sh && nvm install && {{ "{{" }}.COMMAND}}"
 
   init:
     desc: Initialize project environment
     cmds:
-      - echo 'Installing node version...'
-      - source ${HOME}/.nvm/nvm.sh && nvm install
-
       - echo 'Installing node dependencies...'
       - task: _with_nvm
         vars: { COMMAND: "npm install" }
@@ -81,9 +78,3 @@ tasks:
         github_owner="{{cookiecutter.github_owner}}"
     vars:
       TEMPLATE_PATH: '{{ "{{" }}.TEMPLATE_PATH | default "https://github.com/ovsds/template-repository"}}'
-
-  ci-init:
-    desc: CI-specific init
-    cmds:
-      - echo 'Installing node dependencies...'
-      - npm clean-install
