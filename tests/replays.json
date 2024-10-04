@@ -7,6 +7,12 @@
     {
       "name": "Default",
       "parameters": {}
+    },
+    {
+      "name": "Scripts",
+      "parameters": {
+        "scripts": "true"
+      }
     }
   ]
 }
