@@ -1,6 +1,6 @@
 # {{cookiecutter.project_name}}
 
-[![CI](https://github.com/{{cookiecutter.github_owner}}/{{cookiecutter.project_slug}}/workflows/Check%20PR/badge.svg)](https://github.com/{{cookiecutter.github_owner}}/{{cookiecutter.project_slug}}/actions?query=workflow%3A%22%22Check+PR%22%22)
+[![CI](https://github.com/{{cookiecutter.owner_github_login}}/{{cookiecutter.project_slug}}/workflows/Check%20PR/badge.svg)](https://github.com/{{cookiecutter.owner_github_login}}/{{cookiecutter.project_slug}}/actions?query=workflow%3A%22%22Check+PR%22%22)
 
 {{cookiecutter.project_description}}
 

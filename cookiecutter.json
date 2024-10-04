@@ -2,7 +2,10 @@
   "project_name": "Template",
   "project_description": "{{ cookiecutter.project_name }}",
   "project_slug": "{{ cookiecutter.project_name.lower().replace(' ',  '-') }}",
-  "node_version": "v20.15.1",
-  "github_owner": "ovsds",
+  "node_version": "v21.5.0",
+  "owner_name": "Dmitry Ovsiannikov",
+  "owner_email": "github@ovsds.ru",
+  "owner_github_login": "ovsds",
+  "scripts": "false",
   "_empty_guard": ""
 }

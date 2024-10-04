@@ -1,6 +1,13 @@
 version: 3
 
 silent: true
+{%- if cookiecutter.scripts == 'true' %}
+
+includes:
+  scripts:
+    taskfile: ./.scripts
+    dir: ./.scripts
+{%- endif %}
 
 vars:
   NENV: "node_modules"
@@ -26,6 +33,11 @@ tasks:
       - echo 'Installing husky pre-commit...'
       - task: _with_nvm
         vars: { COMMAND: "npm run prepare" }
+{%- if cookiecutter.scripts == 'true' %}
+
+      - echo 'Installing .scripts dependencies...'
+      - task: scripts:init
+{%- endif %}
 
   lint:
     desc: Lint project
@@ -33,6 +45,11 @@ tasks:
       - echo 'Running prettier checks...'
       - task: _prettier
         vars: { COMMAND: "--check ." }
+{%- if cookiecutter.scripts == 'true' %}
+
+      - echo 'Running scripts checks...'
+      - task: scripts:lint
+{%- endif %}
 
   lint-fix:
     desc: Lint fix project
@@ -40,6 +57,11 @@ tasks:
       - echo 'Running prettier fixes...'
       - task: _prettier
         vars: { COMMAND: "--write ." }
+{%- if cookiecutter.scripts == 'true' %}
+
+      - echo 'Running scripts fixes...'
+      - task: scripts:lint-fix
+{%- endif %}
 
   test:
     desc: Test project
@@ -51,6 +73,11 @@ tasks:
     cmds:
       - echo 'Cleaning node dependencies...'
       - rm -rf {{ "{{" }}.NENV}}
+{%- if cookiecutter.scripts == 'true' %}
+
+      - echo 'Cleaning .scripts dependencies...'
+      - task: scripts:clean
+{%- endif %}
 
   dependencies-update:
     desc: Update dependencies
@@ -62,6 +89,11 @@ tasks:
         vars: { COMMAND: "npm outdated" }
       - task: _with_nvm
         vars: { COMMAND: "npm audit" }
+{%- if cookiecutter.scripts == 'true' %}
+
+      - echo 'Updating .scripts dependencies...'
+      - task: scripts:dependencies-update
+{%- endif %}
 
   update-from-template:
     desc: Update project from template
@@ -75,6 +107,8 @@ tasks:
         project_name="{{cookiecutter.project_name}}"
         project_slug="{{cookiecutter.project_slug}}"
         node_version="{{cookiecutter.node_version}}"
-        github_owner="{{cookiecutter.github_owner}}"
+        owner_name="{{cookiecutter.owner_name}}"
+        owner_github_login="{{cookiecutter.owner_github_login}}"
+        scripts="{{cookiecutter.scripts}}"
     vars:
       TEMPLATE_PATH: '{{ "{{" }}.TEMPLATE_PATH | default "https://github.com/ovsds/template-repository"}}'
