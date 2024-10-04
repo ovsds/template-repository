@@ -1,16 +1,28 @@
 version: 3
 
 silent: true
-{%- if cookiecutter.scripts == 'true' %}
+{%- if cookiecutter.scripts == 'true' or cookiecutter.services != '' %}
 
 includes:
+{%- if cookiecutter.scripts == 'true' %}
   scripts:
     taskfile: ./.scripts
     dir: ./.scripts
 {%- endif %}
+{%- if cookiecutter.services != '' %}
+  {%- for service in cookiecutter.services.split(' ') %}
+  {{service}}:
+    taskfile: ./{{service}}
+    dir: ./{{service}}
+  {%- endfor %}
+{%- endif %}
+{%- endif %}
 
 vars:
   NENV: "node_modules"
+{%- if cookiecutter.services != '' %}
+  SERVICES: "{{cookiecutter.services}}"
+{%- endif %}
 
 tasks:
   _prettier:
@@ -38,6 +50,11 @@ tasks:
       - echo 'Installing .scripts dependencies...'
       - task: scripts:init
 {%- endif %}
+{%- if cookiecutter.services != '' %}
+
+      - for: { var: SERVICES, as: SERVICE }
+        task: "{{ "{{" }}.SERVICE}}:init"
+{%- endif %}
 
   lint:
     desc: Lint project
@@ -49,6 +66,11 @@ tasks:
 
       - echo 'Running scripts checks...'
       - task: scripts:lint
+{%- endif %}
+{%- if cookiecutter.services != '' %}
+
+      - for: { var: SERVICES, as: SERVICE }
+        task: "{{ "{{" }}.SERVICE}}:lint"
 {%- endif %}
 
   lint-fix:
@@ -62,11 +84,21 @@ tasks:
       - echo 'Running scripts fixes...'
       - task: scripts:lint-fix
 {%- endif %}
+{%- if cookiecutter.services != '' %}
+
+      - for: { var: SERVICES, as: SERVICE }
+        task: "{{ "{{" }}.SERVICE}}:lint-fix"
+{%- endif %}
 
   test:
     desc: Test project
     cmds:
       - echo 'Running tests...'
+{%- if cookiecutter.services != '' %}
+
+      - for: { var: SERVICES, as: SERVICE }
+        task: "{{ "{{" }}.SERVICE}}:test"
+{%- endif %}
 
   clean:
     desc: Clean project environment
@@ -77,6 +109,11 @@ tasks:
 
       - echo 'Cleaning .scripts dependencies...'
       - task: scripts:clean
+{%- endif %}
+{%- if cookiecutter.services != '' %}
+
+      - for: { var: SERVICES, as: SERVICE }
+        task: "{{ "{{" }}.SERVICE}}:clean"
 {%- endif %}
 
   dependencies-update:
@@ -94,6 +131,11 @@ tasks:
       - echo 'Updating .scripts dependencies...'
       - task: scripts:dependencies-update
 {%- endif %}
+{%- if cookiecutter.services != '' %}
+
+      - for: { var: SERVICES, as: SERVICE }
+        task: "{{ "{{" }}.SERVICE}}:dependencies-update"
+{%- endif %}
 
   update-from-template:
     desc: Update project from template
@@ -110,5 +152,6 @@ tasks:
         owner_name="{{cookiecutter.owner_name}}"
         owner_github_login="{{cookiecutter.owner_github_login}}"
         scripts="{{cookiecutter.scripts}}"
+        services="{{cookiecutter.services}}"
     vars:
       TEMPLATE_PATH: '{{ "{{" }}.TEMPLATE_PATH | default "https://github.com/ovsds/template-repository"}}'

@@ -1,0 +1,32 @@
+version: 3
+
+silent: true
+
+tasks:
+  init:
+    cmds:
+      - echo 'service2:init'
+
+  lint:
+    cmds:
+      - echo 'service2:lint'
+
+  lint-fix:
+    desc: Lint fix project
+    cmds:
+      - echo 'service2:lint-fix'
+
+  test:
+    desc: Test project
+    cmds:
+      - echo 'service2:test'
+
+  clean:
+    desc: Clean project environment
+    cmds:
+      - echo 'service2:clean'
+
+  dependencies-update:
+    desc: Update dependencies
+    cmds:
+      - echo 'service2:dependencies-update'

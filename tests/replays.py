@@ -1,9 +1,8 @@
-import os
-
 import tests.utils.replay as replay_utils
 import tests.utils.cli as cli_utils
 
 MANIFEST_PATH = "tests/replays.json"
+ADDITIONAL_FILES_PATH = "tests/additional_files"
 RESULTS_PATH = ".test_results"
 NODE_BIN_PATH = "node_modules/.bin"
 
@@ -13,6 +12,7 @@ def test_replay(replay: replay_utils.Replay):
     replay_utils.build_replay(replay, RESULTS_PATH)
 
     cwd = f"{RESULTS_PATH}/{replay.parameters['project_slug']}"
+    replay_utils.copy_additional_files(replay, ADDITIONAL_FILES_PATH, cwd)
 
     cli_utils.run_command("git init", cwd=cwd)
     cli_utils.run_command("task init", cwd=cwd)

@@ -13,6 +13,21 @@
       "parameters": {
         "scripts": "true"
       }
+    },
+    {
+      "name": "Services",
+      "parameters": {
+        "services": "service1 service2"
+      },
+      "additional_files": ["service1/", "service2/"]
+    },
+    {
+      "name": "All",
+      "parameters": {
+        "scripts": "true",
+        "services": "service1 service2"
+      },
+      "additional_files": ["service1/", "service2/"]
     }
   ]
 }
