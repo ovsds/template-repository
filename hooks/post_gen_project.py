@@ -8,7 +8,7 @@ def remove_folder(folder_path: str) -> None:
     shutil.rmtree(folder)
 
 
-def remove_file(file_path: str, missing_ok: bool = True) -> None:
+def remove_file(file_path: str, missing_ok: bool = False) -> None:
     file = pathlib.Path(file_path)
     file.unlink(missing_ok=missing_ok)
 
@@ -18,4 +18,4 @@ if __name__ == "__main__":
         remove_folder(".scripts")
 
     # Remove files from older versions
-    remove_file(".husky/.huskyrc")
+    remove_file(".husky/.huskyrc", missing_ok=True)
