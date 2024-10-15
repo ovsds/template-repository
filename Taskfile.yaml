@@ -77,12 +77,12 @@ tasks:
         --overwrite-if-exists
         --output-dir ../
         {{.TEMPLATE_PATH}}
-        project_name="Cookiecutter Template for GitHub Repository"
-        project_slug="template-repository"
-        node_version="v21.5.0"
-        owner_name="Dmitry Ovsiannikov"
-        owner_github_login="ovsds"
-        scripts="false"
-        services=""
+        project_name='Cookiecutter Template for GitHub Repository'
+        project_slug='template-repository'
+        node_version='v21.5.0'
+        owner_name='Dmitry Ovsiannikov'
+        owner_github_login='ovsds'
+        scripts='false'
+        services=''
     vars:
       TEMPLATE_PATH: '{{.TEMPLATE_PATH | default "."}}'

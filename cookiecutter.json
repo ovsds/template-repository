@@ -1,6 +1,5 @@
 {
   "project_name": "Template",
-  "project_description": "{{ cookiecutter.project_name }}",
   "project_slug": "{{ cookiecutter.project_name.lower().replace(' ',  '-') }}",
   "node_version": "v21.5.0",
   "owner_name": "Dmitry Ovsiannikov",
