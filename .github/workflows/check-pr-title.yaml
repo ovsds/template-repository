@@ -19,4 +19,4 @@ jobs:
       - name: Commitlint PR Title
         uses: ovsds/commitlint-pr-title-action@v1
         with:
-          config_file: commitlint.config.js
+          config_file: ./commitlint.config.js
