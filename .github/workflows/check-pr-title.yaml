@@ -9,7 +9,7 @@ on:
       - edited
 
 jobs:
-  commitlint-pr-title:
+  check-pr-title:
     runs-on: ubuntu-latest
 
     steps:
