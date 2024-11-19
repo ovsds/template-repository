@@ -122,10 +122,6 @@ tasks:
       - echo 'Updating node dependencies...'
       - task: _with_nvm
         vars: { COMMAND: "npm update" }
-      - task: _with_nvm
-        vars: { COMMAND: "npm outdated" }
-      - task: _with_nvm
-        vars: { COMMAND: "npm audit" }
 {%- if cookiecutter.scripts == 'true' %}
 
       - echo 'Updating .scripts dependencies...'
@@ -135,6 +131,25 @@ tasks:
 
       - for: { var: SERVICES, as: SERVICE }
         task: "{{ "{{" }}.SERVICE}}:dependencies-update"
+{%- endif %}
+
+  dependencies-check:
+    desc: Check dependencies
+    cmds:
+      - echo 'Checking node dependencies...'
+      - task: _with_nvm
+        vars: { COMMAND: "npm outdated" }
+      - task: _with_nvm
+        vars: { COMMAND: "npm audit" }
+{%- if cookiecutter.scripts == 'true' %}
+
+      - echo 'Checking .scripts dependencies...'
+      - task: scripts:dependencies-check
+{%- endif %}
+{%- if cookiecutter.services != '' %}
+
+      - for: { var: SERVICES, as: SERVICE }
+        task: "{{ "{{" }}.SERVICE}}:dependencies-check"
 {%- endif %}
 
   update-from-template:
