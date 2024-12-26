@@ -89,5 +89,8 @@ tasks:
         owner_github_login='ovsds'
         scripts='false'
         services=''
+        with_python='true'
+        with_cookiecutter='true'
+        with_trivy='false'
     vars:
       TEMPLATE_PATH: '{{.TEMPLATE_PATH | default "."}}'

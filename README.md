@@ -8,7 +8,7 @@ Cookiecutter Template for GitHub Repository
 
 ### Global dependencies
 
-- cookiecutter
+- [cookiecutter](https://cookiecutter.readthedocs.io/en/stable/installation.html)
 
 ### Basic usage
 

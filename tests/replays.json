@@ -22,10 +22,31 @@
       "additional_files": ["service1/", "service2/"]
     },
     {
+      "name": "With Python",
+      "parameters": {
+        "with_python": "true"
+      }
+    },
+    {
+      "name": "With Cookiecutter",
+      "parameters": {
+        "with_cookiecutter": "true"
+      }
+    },
+    {
+      "name": "With Trivy",
+      "parameters": {
+        "with_trivy": "true"
+      }
+    },
+    {
       "name": "All",
       "parameters": {
         "scripts": "true",
-        "services": "service1 service2"
+        "services": "service1 service2",
+        "with_python": "true",
+        "with_cookiecutter": "true",
+        "with_trivy": "true"
       },
       "additional_files": ["service1/", "service2/"]
     }
