@@ -23,6 +23,9 @@ vars:
 {%- if cookiecutter.services != '' %}
   SERVICES: "{{cookiecutter.services}}"
 {%- endif %}
+{%- if cookiecutter.with_cookiecutter == 'true' %}
+  TEST_RESULTS: ".test_results"
+{%- endif %}
 
 tasks:
   _prettier:
@@ -94,6 +97,9 @@ tasks:
     desc: Test project
     cmds:
       - echo 'Running tests...'
+{%- if cookiecutter.with_cookiecutter == 'true' %}
+      - python -m tests
+{%- endif %}
 {%- if cookiecutter.services != '' %}
 
       - for: { var: SERVICES, as: SERVICE }
@@ -114,6 +120,11 @@ tasks:
 
       - for: { var: SERVICES, as: SERVICE }
         task: "{{ "{{" }}.SERVICE}}:clean"
+{%- endif %}
+{%- if cookiecutter.with_cookiecutter == 'true' %}
+
+      - echo 'Cleaning test results...'
+      - rm -rf {{ "{{" }}.TEST_RESULTS}}
 {%- endif %}
 
   dependencies-update:
@@ -168,5 +179,8 @@ tasks:
         owner_github_login='{{cookiecutter.owner_github_login}}'
         scripts='{{cookiecutter.scripts}}'
         services='{{cookiecutter.services}}'
+        with_python='{{cookiecutter.with_python}}'
+        with_cookiecutter='{{cookiecutter.with_cookiecutter}}'
+        with_trivy='{{cookiecutter.with_trivy}}'
     vars:
       TEMPLATE_PATH: '{{ "{{" }}.TEMPLATE_PATH | default "https://github.com/ovsds/template-repository"}}'

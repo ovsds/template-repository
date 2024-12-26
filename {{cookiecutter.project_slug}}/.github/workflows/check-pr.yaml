@@ -20,6 +20,16 @@ jobs:
 
       - name: Setup Environment
         uses: ./.github/actions/setup_environment
+        {%- if cookiecutter.with_python == 'true' or cookiecutter.with_cookiecutter == 'true' %}
+        with:
+        {%- endif %}
+        {%- if cookiecutter.with_python == 'true' %}
+          python-enabled: true
+          poetry-enabled: true
+        {%- endif %}
+        {%- if cookiecutter.with_cookiecutter == 'true' %}
+          cookiecutter-enabled: true
+        {%- endif %}
 
       - name: Install Dependencies
         run: |

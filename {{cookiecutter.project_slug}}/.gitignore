@@ -10,3 +10,8 @@ node_modules/
 
 # Environment
 .env
+{%- if cookiecutter.with_cookiecutter == 'true' %}
+
+# Test results
+/.test_results/
+{%- endif %}

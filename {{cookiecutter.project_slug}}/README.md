@@ -5,6 +5,18 @@
 {{ cookiecutter.project_name }}
 
 ## Usage
+{%- if cookiecutter.with_cookiecutter == 'true' %}
+
+### Global dependencies
+
+- [cookiecutter](https://cookiecutter.readthedocs.io/en/stable/installation.html)
+
+### Basic usage
+
+```shell
+cookiecutter https://github.com/{{ cookiecutter.owner_github_login }}/{{ cookiecutter.project_slug }}
+```
+{%- endif %}
 
 ## Development
 

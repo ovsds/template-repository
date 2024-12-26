@@ -11,3 +11,8 @@ trim_trailing_whitespace = true
 
 [*.sh]
 indent_size = 4
+{%- if cookiecutter.with_python == 'true' %}
+
+[*.py]
+indent_size = 4
+{%- endif %}

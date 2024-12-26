@@ -1,0 +1,21 @@
+# Environment variables
+.env
+{%- if cookiecutter.with_python == 'true' %}
+
+# Python Dependencies
+.venv/
+
+# Python cache
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.coverage/
+{%- endif %}
+{%- if cookiecutter.with_cookiecutter == 'true' %}
+
+# Template sources
+{{ "{{" }}cookiecutter.project_slug}}/
+
+# Test results
+.test_results/
+{%- endif %}

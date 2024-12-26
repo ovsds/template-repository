@@ -7,5 +7,8 @@
   "owner_github_login": "ovsds",
   "scripts": "false",
   "services": "",
+  "with_python": "false",
+  "with_cookiecutter": "false",
+  "with_trivy": "false",
   "_empty_guard": ""
 }
