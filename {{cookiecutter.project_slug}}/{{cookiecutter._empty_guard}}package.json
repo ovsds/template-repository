@@ -7,7 +7,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.2.11",
     "prettier": "^3.4.2"{% if cookiecutter.with_python == "true" %},
-    "pyright": "1.1.389"{% endif %}
+    "pyright": "^1.1.389"{% endif %}
   },
   "hooks": {
     "pre-commit": "lint-staged",

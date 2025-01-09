@@ -40,13 +40,20 @@
       }
     },
     {
+      "name": "With Zizmor",
+      "parameters": {
+        "with_zizmor": "true"
+      }
+    },
+    {
       "name": "All",
       "parameters": {
         "scripts": "true",
         "services": "service1 service2",
         "with_python": "true",
         "with_cookiecutter": "true",
-        "with_trivy": "true"
+        "with_trivy": "true",
+        "with_zizmor": "true"
       },
       "additional_files": ["service1/", "service2/"]
     }

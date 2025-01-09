@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Setup Environment
         uses: ./.github/actions/setup_environment
@@ -24,6 +26,7 @@ jobs:
           python-enabled: true
           poetry-enabled: true
           cookiecutter-enabled: true
+          zizmor-enabled: true
 
       - name: Install Dependencies
         run: |
@@ -32,7 +35,11 @@ jobs:
       - name: Lint PR
         run: |
           task lint
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required for Zizmor
 
       - name: Test PR
         run: |
           task test
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required for Zizmor
