@@ -47,7 +47,27 @@ jobs:
         env:
           GH_TOKEN: ${{ "{{" }} secrets.GITHUB_TOKEN }} # Required for Zizmor
         {%- endif %}
+      {%- if cookiecutter.with_docker == 'true' %}
+
+      - name: Prepare auxiliary containers
+        working-directory: docker
+        run: |
+          task build
+          task start
+        env:
+          ENVIRONMENT: CI
+      {%- endif %}
 
       - name: Test PR
         run: |
           task test
+      {%- if cookiecutter.with_docker == 'true' %}
+
+      - name: Clean up auxiliary containers
+        if: success() || failure()
+        working-directory: docker
+        run: |
+          task clean
+        env:
+          ENVIRONMENT: CI
+      {%- endif %}

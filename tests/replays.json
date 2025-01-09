@@ -46,6 +46,12 @@
       }
     },
     {
+      "name": "With Docker",
+      "parameters": {
+        "with_docker": "true"
+      }
+    },
+    {
       "name": "All",
       "parameters": {
         "scripts": "true",
@@ -53,7 +59,8 @@
         "with_python": "true",
         "with_cookiecutter": "true",
         "with_trivy": "true",
-        "with_zizmor": "true"
+        "with_zizmor": "true",
+        "with_docker": "true"
       },
       "additional_files": ["service1/", "service2/"]
     }

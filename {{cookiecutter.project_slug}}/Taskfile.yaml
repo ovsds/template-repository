@@ -1,7 +1,7 @@
 version: 3
 
 silent: true
-{%- if cookiecutter.scripts == 'true' or cookiecutter.services != '' %}
+{%- if cookiecutter.scripts == 'true' or cookiecutter.services != '' or cookiecutter.with_docker == 'true' %}
 
 includes:
 {%- if cookiecutter.scripts == 'true' %}
@@ -15,6 +15,11 @@ includes:
     taskfile: ./{{service}}
     dir: ./{{service}}
   {%- endfor %}
+{%- endif %}
+{%- if cookiecutter.with_docker == 'true' %}
+  docker:
+    taskfile: ./docker
+    dir: ./docker
 {%- endif %}
 {%- endif %}
 
@@ -193,5 +198,16 @@ tasks:
         with_cookiecutter='{{cookiecutter.with_cookiecutter}}'
         with_trivy='{{cookiecutter.with_trivy}}'
         with_zizmor='{{cookiecutter.with_zizmor}}'
+        with_docker='{{cookiecutter.with_docker}}'
     vars:
       TEMPLATE_PATH: '{{ "{{" }}.TEMPLATE_PATH | default "https://github.com/ovsds/template-repository"}}'
+{%- if cookiecutter.with_docker == 'true' %}
+
+  configure-builder:
+    desc: Configure buildx for multi-arch builds
+    cmds:
+      - echo 'Configuring buildx...'
+      - docker buildx create
+        --driver docker-container
+        --use
+{%- endif %}
