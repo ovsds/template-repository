@@ -24,6 +24,9 @@ cookiecutter https://github.com/{{ cookiecutter.owner_github_login }}/{{ cookiec
 
 - [Taskfile](https://taskfile.dev/installation/)
 - [nvm](https://github.com/nvm-sh/nvm?tab=readme-ov-file#install--update-script)
+{%- if cookiecutter.with_zizmor == 'true' %}
+- [zizmor](https://woodruffw.github.io/zizmor/installation/) - used for GHA security scanning
+{%- endif %}
 
 ### Taskfile commands
 

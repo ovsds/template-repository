@@ -75,6 +75,11 @@ tasks:
       - for: { var: SERVICES, as: SERVICE }
         task: "{{ "{{" }}.SERVICE}}:lint"
 {%- endif %}
+{%- if cookiecutter.with_zizmor == 'true' %}
+
+      - echo 'Running GHA checks...'
+      - GH_TOKEN="$(gh auth token)" zizmor .
+{%- endif %}
 
   lint-fix:
     desc: Lint fix project
@@ -91,6 +96,11 @@ tasks:
 
       - for: { var: SERVICES, as: SERVICE }
         task: "{{ "{{" }}.SERVICE}}:lint-fix"
+{%- endif %}
+{%- if cookiecutter.with_zizmor == 'true' %}
+
+      - echo 'Running GHA checks...'
+      - GH_TOKEN="$(gh auth token)" zizmor .
 {%- endif %}
 
   test:
@@ -182,5 +192,6 @@ tasks:
         with_python='{{cookiecutter.with_python}}'
         with_cookiecutter='{{cookiecutter.with_cookiecutter}}'
         with_trivy='{{cookiecutter.with_trivy}}'
+        with_zizmor='{{cookiecutter.with_zizmor}}'
     vars:
       TEMPLATE_PATH: '{{ "{{" }}.TEMPLATE_PATH | default "https://github.com/ovsds/template-repository"}}'

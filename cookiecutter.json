@@ -10,5 +10,6 @@
   "with_python": "false",
   "with_cookiecutter": "false",
   "with_trivy": "false",
+  "with_zizmor": "false",
   "_empty_guard": ""
 }

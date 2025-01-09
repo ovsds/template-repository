@@ -17,10 +17,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Setup Environment
         uses: ./.github/actions/setup_environment
-        {%- if cookiecutter.with_python == 'true' or cookiecutter.with_cookiecutter == 'true' %}
+        {%- if cookiecutter.with_python == 'true' or cookiecutter.with_cookiecutter == 'true' or cookiecutter.with_zizmor == 'true' %}
         with:
         {%- endif %}
         {%- if cookiecutter.with_python == 'true' %}
@@ -30,6 +32,9 @@ jobs:
         {%- if cookiecutter.with_cookiecutter == 'true' %}
           cookiecutter-enabled: true
         {%- endif %}
+        {%- if cookiecutter.with_zizmor == 'true' %}
+          zizmor-enabled: true
+        {%- endif %}
 
       - name: Install Dependencies
         run: |
@@ -38,6 +43,10 @@ jobs:
       - name: Lint PR
         run: |
           task lint
+        {%- if cookiecutter.with_zizmor == 'true' %}
+        env:
+          GH_TOKEN: ${{ "{{" }} secrets.GITHUB_TOKEN }} # Required for Zizmor
+        {%- endif %}
 
       - name: Test PR
         run: |
