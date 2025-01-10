@@ -17,5 +17,8 @@ if __name__ == "__main__":
     if "{{ cookiecutter.scripts }}" != "true":
         remove_folder(".scripts")
 
+    if "{{ cookiecutter.with_docker }}" != "true":
+        remove_folder("docker")
+
     # Remove files from older versions
     remove_file(".husky/.huskyrc", missing_ok=True)
