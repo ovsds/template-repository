@@ -20,5 +20,11 @@ if __name__ == "__main__":
     if "{{ cookiecutter.with_docker }}" != "true":
         remove_folder("docker")
 
+    if "{{ cookiecutter.with_build }}" != "true":
+        remove_file(".github/workflows/release-pr-cleanup.yaml")
+        remove_file(".github/workflows/release-pr.yaml")
+        remove_file(".github/workflows/release-scan.yaml")
+        remove_file(".github/workflows/release.yaml")
+
     # Remove files from older versions
     remove_file(".husky/.huskyrc", missing_ok=True)

@@ -199,9 +199,10 @@ tasks:
         with_trivy='{{cookiecutter.with_trivy}}'
         with_zizmor='{{cookiecutter.with_zizmor}}'
         with_docker='{{cookiecutter.with_docker}}'
+        with_build='{{cookiecutter.with_build}}'
     vars:
       TEMPLATE_PATH: '{{ "{{" }}.TEMPLATE_PATH | default "https://github.com/ovsds/template-repository"}}'
-{%- if cookiecutter.with_docker == 'true' %}
+{%- if cookiecutter.with_build == 'true' %}
 
   configure-builder:
     desc: Configure buildx for multi-arch builds

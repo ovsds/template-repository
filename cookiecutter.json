@@ -12,5 +12,6 @@
   "with_trivy": "false",
   "with_zizmor": "false",
   "with_docker": "false",
+  "with_build": "false",
   "_empty_guard": ""
 }
