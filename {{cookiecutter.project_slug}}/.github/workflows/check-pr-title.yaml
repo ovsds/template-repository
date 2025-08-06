@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   check-pr-title:
-    runs-on: ubuntu-latest
+    runs-on: {{ cookiecutter.github_workflow_runs_on }}
 
     steps:
       - name: Checkout config file

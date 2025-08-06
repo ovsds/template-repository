@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   release-pr-cleanup:
-    runs-on: ubuntu-22.04
+    runs-on: {{ cookiecutter.github_workflow_runs_on }}
 
     permissions:
       contents: read

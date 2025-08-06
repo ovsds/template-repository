@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   scan:
-    runs-on: ubuntu-latest
+    runs-on: {{ cookiecutter.github_workflow_runs_on }}
 
     permissions:
       contents: read
