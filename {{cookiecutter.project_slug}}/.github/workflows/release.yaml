@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   release:
-    runs-on: ubuntu-20.04
+    runs-on: {{ cookiecutter.github_workflow_runs_on }}
 
     permissions:
       contents: read

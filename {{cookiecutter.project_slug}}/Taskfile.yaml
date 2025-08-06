@@ -190,6 +190,7 @@ tasks:
         project_name='{{cookiecutter.project_name}}'
         project_slug='{{cookiecutter.project_slug}}'
         node_version='{{cookiecutter.node_version}}'
+        github_workflow_runs_on='{{cookiecutter.github_workflow_runs_on}}'
         owner_name='{{cookiecutter.owner_name}}'
         owner_github_login='{{cookiecutter.owner_github_login}}'
         scripts='{{cookiecutter.scripts}}'

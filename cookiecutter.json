@@ -2,6 +2,7 @@
   "project_name": "Template",
   "project_slug": "{{ cookiecutter.project_name.lower().replace(' ',  '-') }}",
   "node_version": "v21.5.0",
+  "github_workflow_runs_on": "ubuntu-latest",
   "owner_name": "Dmitry Ovsiannikov",
   "owner_email": "github@ovsds.ru",
   "owner_github_login": "ovsds",
