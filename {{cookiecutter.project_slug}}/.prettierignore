@@ -1,6 +1,6 @@
 # Environment variables
 .env
-{%- if cookiecutter.with_python == 'true' %}
+{%- if cookiecutter.with_python == 'true' or cookiecutter.scripts == 'true' %}
 
 # Python Dependencies
 .venv/
