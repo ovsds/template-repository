@@ -9,7 +9,7 @@ COOKIECUTTER_VERSION="2.4.0"
 ZIZMOR_VERSION="1.0.1"
 {%- endif %}
 {%- if cookiecutter.with_trivy == 'true' %}
-TRIVY_VERSION="v0.57.1"
+TRIVY_VERSION="v0.69.3"
 {%- endif %}
 
 # Install task (go-task). The Taskfile is the unified entry point.

@@ -10,7 +10,7 @@ TASK_VERSION="v3.33.1"
 COOKIECUTTER_VERSION="2.4.0"
 ZIZMOR_VERSION="1.0.1"
 POETRY_VERSION="1.7.1"
-TRIVY_VERSION="v0.57.1"
+TRIVY_VERSION="v0.69.3"
 
 # Install task (go-task). The Taskfile is the unified entry point.
 if ! command -v task >/dev/null; then
