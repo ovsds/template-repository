@@ -13,8 +13,9 @@ if ! command -v task >/dev/null; then
 fi
 
 # Install nvm at ~/.nvm — Taskfile's _with_nvm sources from this path.
+# git clone avoids nvm's install.sh, which exits non-zero under `set -eo pipefail`.
 if [ ! -d "${HOME}/.nvm" ]; then
-  curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh" | bash
+  git clone --depth 1 -b "${NVM_VERSION}" https://github.com/nvm-sh/nvm.git "${HOME}/.nvm"
 fi
 export NVM_DIR="${HOME}/.nvm"
 # shellcheck source=/dev/null
