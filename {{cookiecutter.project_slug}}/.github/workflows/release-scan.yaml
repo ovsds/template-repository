@@ -24,11 +24,6 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup Environment
-        uses: ./.github/actions/setup_environment
-        with:
-          trivy-enabled: true
-
       - name: Get latest image tag
         id: get_tag
         uses: pozetroninc/github-action-get-latest-release@v0.8.0
@@ -37,16 +32,35 @@ jobs:
           repo: ${{ "{{" }} github.event.repository.name }}
           excludes: prerelease, draft
 
+      - name: Install devcontainer CLI
+        run: npm install -g @devcontainers/cli
+
+      - name: Build & start devcontainer
+        run: devcontainer up --workspace-folder .
+
       - name: Scan image for vulnerabilities
         id: scan
-        uses: ovsds/run-with-output-action@v1
         continue-on-error: true
-        with:
-          run: |
-            IMAGE_REGISTRY="ghcr.io/${{ "{{" }} github.repository_owner }}" \
-            IMAGE_NAME="${{ "{{" }} github.event.repository.name }}" \
-            IMAGE_TAG="${{ "{{" }} steps.get_tag.outputs.release }}" \
-            task ci-image-scan
+        env:
+          IMAGE_REGISTRY: ghcr.io/${{ "{{" }} github.repository_owner }}
+          IMAGE_NAME: ${{ "{{" }} github.event.repository.name }}
+          IMAGE_TAG: ${{ "{{" }} steps.get_tag.outputs.release }}
+        run: |
+          devcontainer exec --workspace-folder . \
+            --remote-env "IMAGE_REGISTRY=${IMAGE_REGISTRY}" \
+            --remote-env "IMAGE_NAME=${IMAGE_NAME}" \
+            --remote-env "IMAGE_TAG=${IMAGE_TAG}" \
+            bash -c "task ci-image-scan | tee scan-output.txt"
+
+      - name: Capture scan output
+        id: scan-output
+        if: always()
+        run: |
+          {
+            echo 'stdout<<EOF'
+            cat scan-output.txt 2>/dev/null || echo "(scan output unavailable)"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
 
       - name: Report vulnerabilities
         uses: ovsds/create-or-update-unique-issue-action@v1
@@ -55,7 +69,7 @@ jobs:
           body: |
             ## Vulnerabilities found
             ```
-            ${{ "{{" }} steps.scan.outputs.stdout }}
+            ${{ "{{" }} steps.scan-output.outputs.stdout }}
             ```
           unique-title-includes: "Security scan issues for "
-          close: ${{ "{{" }} steps.scan.outputs.exit_code == 0 }}
+          close: ${{ "{{" }} steps.scan.outcome == 'success' }}

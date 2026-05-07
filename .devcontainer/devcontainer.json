@@ -1,0 +1,30 @@
+{
+  "name": "template-repository",
+  "image": "mcr.microsoft.com/devcontainers/base:bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.12.1"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "21.5.0",
+      "nvmInstallPath": "/home/vscode/.nvm"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+    "ghcr.io/devcontainers-extra/features/go-task:1": {
+      "version": "3.33.1"
+    },
+    "ghcr.io/devcontainers-extra/features/cookiecutter:2": {
+      "version": "2.4.0"
+    },
+    "ghcr.io/devcontainers-extra/features/poetry:2": {
+      "version": "1.7.1"
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": ["esbenp.prettier-vscode", "ms-python.python"]
+    }
+  }
+}

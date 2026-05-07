@@ -17,6 +17,11 @@ jobs:
 
     permissions:
       contents: read
+{%- if cookiecutter.with_zizmor == 'true' %}
+
+    env:
+      GH_TOKEN: ${{ "{{" }} secrets.GITHUB_TOKEN }} # Required for Zizmor
+{%- endif %}
 
     steps:
       - name: Checkout repository
@@ -24,54 +29,25 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup Environment
-        uses: ./.github/actions/setup_environment
-        {%- if cookiecutter.with_python == 'true' or cookiecutter.with_cookiecutter == 'true' or cookiecutter.with_zizmor == 'true' %}
-        with:
-        {%- endif %}
-        {%- if cookiecutter.with_python == 'true' %}
-          python-enabled: true
-          poetry-enabled: true
-        {%- endif %}
-        {%- if cookiecutter.with_cookiecutter == 'true' %}
-          cookiecutter-enabled: true
-        {%- endif %}
-        {%- if cookiecutter.with_zizmor == 'true' %}
-          zizmor-enabled: true
-        {%- endif %}
+      - name: Install devcontainer CLI
+        run: npm install -g @devcontainers/cli
 
-      - name: Install Dependencies
-        run: |
-          task init
+      - name: Build & start devcontainer
+        run: devcontainer up --workspace-folder .
 
-      - name: Lint PR
-        run: |
-          task lint
-        {%- if cookiecutter.with_zizmor == 'true' %}
-        env:
-          GH_TOKEN: ${{ "{{" }} secrets.GITHUB_TOKEN }} # Required for Zizmor
-        {%- endif %}
-      {%- if cookiecutter.with_docker == 'true' %}
+      - name: Lint
+        run: devcontainer exec --workspace-folder . {% if cookiecutter.with_zizmor == 'true' %}--remote-env "GH_TOKEN=${GH_TOKEN}" {% endif %}task lint
+{%- if cookiecutter.with_docker == 'true' %}
 
       - name: Prepare auxiliary containers
-        working-directory: docker
-        run: |
-          task build
-          task start
-        env:
-          ENVIRONMENT: CI
-      {%- endif %}
+        run: devcontainer exec --workspace-folder . --remote-env "ENVIRONMENT=CI" bash -c "cd docker && task build && task start"
+{%- endif %}
 
-      - name: Test PR
-        run: |
-          task test
-      {%- if cookiecutter.with_docker == 'true' %}
+      - name: Test
+        run: devcontainer exec --workspace-folder . {% if cookiecutter.with_zizmor == 'true' %}--remote-env "GH_TOKEN=${GH_TOKEN}" {% endif %}task test
+{%- if cookiecutter.with_docker == 'true' %}
 
       - name: Clean up auxiliary containers
         if: success() || failure()
-        working-directory: docker
-        run: |
-          task clean
-        env:
-          ENVIRONMENT: CI
-      {%- endif %}
+        run: devcontainer exec --workspace-folder . --remote-env "ENVIRONMENT=CI" bash -c "cd docker && task clean"
+{%- endif %}

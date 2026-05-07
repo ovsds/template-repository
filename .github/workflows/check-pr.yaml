@@ -18,32 +18,23 @@ jobs:
     permissions:
       contents: read
 
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required for Zizmor
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           persist-credentials: false
 
-      - name: Setup Environment
-        uses: ./.github/actions/setup_environment
-        with:
-          python-enabled: true
-          poetry-enabled: true
-          cookiecutter-enabled: true
-          zizmor-enabled: true
+      - name: Install devcontainer CLI
+        run: npm install -g @devcontainers/cli
 
-      - name: Install Dependencies
-        run: |
-          task init
+      - name: Build & start devcontainer
+        run: devcontainer up --workspace-folder .
 
-      - name: Lint PR
-        run: |
-          task lint
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required for Zizmor
+      - name: Lint
+        run: devcontainer exec --workspace-folder . --remote-env "GH_TOKEN=${GH_TOKEN}" task lint
 
-      - name: Test PR
-        run: |
-          task test
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required for Zizmor
+      - name: Test
+        run: devcontainer exec --workspace-folder . --remote-env "GH_TOKEN=${GH_TOKEN}" task test
