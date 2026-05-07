@@ -2,7 +2,11 @@
   "name": "{{cookiecutter.project_slug}}",
   "image": "mcr.microsoft.com/devcontainers/base:bookworm",
   "features": {
-    "ghcr.io/devcontainers/features/github-cli:1": {}{% if cookiecutter.with_python == 'true' %},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "{{cookiecutter.node_version | replace('v', '')}}",
+      "nvmInstallPath": "/home/vscode/.nvm"
+    }{% if cookiecutter.with_python == 'true' or cookiecutter.with_cookiecutter == 'true' or cookiecutter.with_zizmor == 'true' %},
     "ghcr.io/devcontainers/features/python:1": {
       "version": "3.12.1"
     }{% endif %}{% if cookiecutter.with_docker == 'true' or cookiecutter.with_build == 'true' %},

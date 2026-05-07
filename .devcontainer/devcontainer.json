@@ -5,6 +5,10 @@
     "ghcr.io/devcontainers/features/python:1": {
       "version": "3.12.1"
     },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "21.5.0",
+      "nvmInstallPath": "/home/vscode/.nvm"
+    },
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
   "postCreateCommand": "bash .devcontainer/setup.sh",
