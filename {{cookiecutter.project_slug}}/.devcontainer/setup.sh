@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -eo pipefail
+# nvm.sh references unset vars; cannot use `set -u`.
 
 TASK_VERSION="v3.33.1"
 NVM_VERSION="v0.40.1"
