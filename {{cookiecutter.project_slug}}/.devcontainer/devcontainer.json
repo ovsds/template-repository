@@ -6,9 +6,21 @@
     "ghcr.io/devcontainers/features/node:1": {
       "version": "{{cookiecutter.node_version | replace('v', '')}}",
       "nvmInstallPath": "/home/vscode/.nvm"
+    },
+    "ghcr.io/devcontainers-extra/features/go-task:1": {
+      "version": "3.33.1"
     }{% if cookiecutter.with_python == 'true' or cookiecutter.with_cookiecutter == 'true' or cookiecutter.with_zizmor == 'true' %},
     "ghcr.io/devcontainers/features/python:1": {
       "version": "3.12.1"
+    }{% endif %}{% if cookiecutter.with_python == 'true' %},
+    "ghcr.io/devcontainers-extra/features/poetry:2": {
+      "version": "1.7.1"
+    }{% endif %}{% if cookiecutter.with_cookiecutter == 'true' %},
+    "ghcr.io/devcontainers-extra/features/cookiecutter:2": {
+      "version": "2.4.0"
+    }{% endif %}{% if cookiecutter.with_trivy == 'true' %},
+    "ghcr.io/devcontainers-extra/features/trivy:1": {
+      "version": "0.69.3"
     }{% endif %}{% if cookiecutter.with_docker == 'true' or cookiecutter.with_build == 'true' %},
     "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}{% endif %}
   },

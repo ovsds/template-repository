@@ -27,16 +27,14 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Install devcontainer CLI
+        run: npm install -g @devcontainers/cli
+
+      - name: Build & start devcontainer
+        run: devcontainer up --workspace-folder .
+
       - name: Lint
-        uses: devcontainers/ci@v0.3
-        with:
-          runCmd: task lint
-          env: |
-            GH_TOKEN
+        run: devcontainer exec --workspace-folder . --remote-env "GH_TOKEN=${GH_TOKEN}" task lint
 
       - name: Test
-        uses: devcontainers/ci@v0.3
-        with:
-          runCmd: task test
-          env: |
-            GH_TOKEN
+        run: devcontainer exec --workspace-folder . --remote-env "GH_TOKEN=${GH_TOKEN}" task test

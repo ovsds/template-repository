@@ -42,36 +42,37 @@ jobs:
           username: ${{ "{{" }} github.actor }}
           password: ${{ "{{" }} secrets.GITHUB_TOKEN }}
 
+      - name: Install devcontainer CLI
+        run: npm install -g @devcontainers/cli
+
+      - name: Build & start devcontainer
+        run: devcontainer up --workspace-folder .
+
       - name: Build + push image
-        uses: devcontainers/ci@v0.3
         env:
           IMAGE_REGISTRY: ${{ "{{" }} steps.get-image-data.outputs.registry }}
           IMAGE_NAME: ${{ "{{" }} steps.get-image-data.outputs.name }}
           IMAGE_TAG: ${{ "{{" }} steps.get-image-data.outputs.tag }}
-        with:
-          runCmd: |
-            task configure-builder
-            task ci-image-push
-          env: |
-            IMAGE_REGISTRY
-            IMAGE_NAME
-            IMAGE_TAG
+        run: |
+          devcontainer exec --workspace-folder . \
+            --remote-env "IMAGE_REGISTRY=${IMAGE_REGISTRY}" \
+            --remote-env "IMAGE_NAME=${IMAGE_NAME}" \
+            --remote-env "IMAGE_TAG=${IMAGE_TAG}" \
+            bash -c "task configure-builder && task ci-image-push"
 
       - name: Scan image
         id: scan
         continue-on-error: true
-        uses: devcontainers/ci@v0.3
         env:
           IMAGE_REGISTRY: ${{ "{{" }} steps.get-image-data.outputs.registry }}
           IMAGE_NAME: ${{ "{{" }} steps.get-image-data.outputs.name }}
           IMAGE_TAG: ${{ "{{" }} steps.get-image-data.outputs.tag }}
-        with:
-          runCmd: |
-            task ci-image-scan | tee scan-output.txt
-          env: |
-            IMAGE_REGISTRY
-            IMAGE_NAME
-            IMAGE_TAG
+        run: |
+          devcontainer exec --workspace-folder . \
+            --remote-env "IMAGE_REGISTRY=${IMAGE_REGISTRY}" \
+            --remote-env "IMAGE_NAME=${IMAGE_NAME}" \
+            --remote-env "IMAGE_TAG=${IMAGE_TAG}" \
+            bash -c "task ci-image-scan | tee scan-output.txt"
 
       - name: Capture scan output
         id: scan-output

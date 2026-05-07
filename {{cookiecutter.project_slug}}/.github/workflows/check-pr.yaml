@@ -29,43 +29,25 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Install devcontainer CLI
+        run: npm install -g @devcontainers/cli
+
+      - name: Build & start devcontainer
+        run: devcontainer up --workspace-folder .
+
       - name: Lint
-        uses: devcontainers/ci@v0.3
-        with:
-          runCmd: task lint
-          {%- if cookiecutter.with_zizmor == 'true' %}
-          env: |
-            GH_TOKEN
-          {%- endif %}
+        run: devcontainer exec --workspace-folder . {% if cookiecutter.with_zizmor == 'true' %}--remote-env "GH_TOKEN=${GH_TOKEN}" {% endif %}task lint
 {%- if cookiecutter.with_docker == 'true' %}
 
       - name: Prepare auxiliary containers
-        uses: devcontainers/ci@v0.3
-        env:
-          ENVIRONMENT: CI
-        with:
-          runCmd: cd docker && task build && task start
-          env: |
-            ENVIRONMENT
+        run: devcontainer exec --workspace-folder . --remote-env "ENVIRONMENT=CI" bash -c "cd docker && task build && task start"
 {%- endif %}
 
       - name: Test
-        uses: devcontainers/ci@v0.3
-        with:
-          runCmd: task test
-          {%- if cookiecutter.with_zizmor == 'true' %}
-          env: |
-            GH_TOKEN
-          {%- endif %}
+        run: devcontainer exec --workspace-folder . {% if cookiecutter.with_zizmor == 'true' %}--remote-env "GH_TOKEN=${GH_TOKEN}" {% endif %}task test
 {%- if cookiecutter.with_docker == 'true' %}
 
       - name: Clean up auxiliary containers
         if: success() || failure()
-        uses: devcontainers/ci@v0.3
-        env:
-          ENVIRONMENT: CI
-        with:
-          runCmd: cd docker && task clean
-          env: |
-            ENVIRONMENT
+        run: devcontainer exec --workspace-folder . --remote-env "ENVIRONMENT=CI" bash -c "cd docker && task clean"
 {%- endif %}
