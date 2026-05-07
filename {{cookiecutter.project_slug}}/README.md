@@ -20,7 +20,22 @@ cookiecutter https://github.com/{{ cookiecutter.owner_github_login }}/{{ cookiec
 
 ## Development
 
-### Global dependencies
+### Devcontainer (recommended)
+
+The repo ships with a [devcontainer](.devcontainer/devcontainer.json) that bundles `task`, the pinned Node version (via nvm){%- if cookiecutter.with_python == 'true' %}, Python{%- endif %}{%- if cookiecutter.with_cookiecutter == 'true' %}, `cookiecutter`{%- endif %}{%- if cookiecutter.with_zizmor == 'true' %}, `zizmor`{%- endif %}{%- if cookiecutter.with_trivy == 'true' %}, `trivy`{%- endif %}. Both human IDEs and headless agents share the same definition.
+
+- **VSCode / Cursor / JetBrains:** open the folder; "Reopen in Container" / "Open Dev Container".
+- **CLI / headless:** with the [`devcontainer` CLI](https://github.com/devcontainers/cli):
+  ```shell
+  devcontainer up --workspace-folder .
+  devcontainer exec --workspace-folder . task --list-all
+  ```
+
+All `task` targets work inside the container — no host toolchain required. First boot runs [`setup.sh`](.devcontainer/setup.sh) which installs the toolchain and runs `task init`.
+
+### Without devcontainer
+
+Global dependencies:
 
 - [Taskfile](https://taskfile.dev/installation/)
 - [nvm](https://github.com/nvm-sh/nvm?tab=readme-ov-file#install--update-script)

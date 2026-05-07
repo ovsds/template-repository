@@ -1,0 +1,17 @@
+{
+  "name": "{{cookiecutter.project_slug}}",
+  "image": "mcr.microsoft.com/devcontainers/base:bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}{% if cookiecutter.with_python == 'true' %},
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.12.1"
+    }{% endif %}{% if cookiecutter.with_docker == 'true' or cookiecutter.with_build == 'true' %},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}{% endif %}
+  },
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": ["esbenp.prettier-vscode"{% if cookiecutter.with_python == 'true' %}, "ms-python.python"{% endif %}]
+    }
+  }
+}
