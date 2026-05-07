@@ -9,7 +9,8 @@
       "version": "21.5.0",
       "nvmInstallPath": "/home/vscode/.nvm"
     },
-    "ghcr.io/devcontainers/features/github-cli:1": {}
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
   },
   "postCreateCommand": "bash .devcontainer/setup.sh",
   "customizations": {
