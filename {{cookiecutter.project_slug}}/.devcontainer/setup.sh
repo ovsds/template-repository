@@ -26,10 +26,12 @@ pipx install "zizmor==${ZIZMOR_VERSION}"
 {%- endif %}
 {%- if cookiecutter.with_trivy == 'true' %}
 
-# Install trivy via the official install script.
+# Install trivy via direct tarball — official install.sh has issues in
+# the bookworm devcontainer base image.
 if ! command -v trivy >/dev/null; then
-  curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
-    | sudo sh -s -- -b /usr/local/bin "${TRIVY_VERSION}"
+  TRIVY_TARBALL="trivy_${TRIVY_VERSION#v}_Linux-64bit.tar.gz"
+  curl -fsSL "https://github.com/aquasecurity/trivy/releases/download/${TRIVY_VERSION}/${TRIVY_TARBALL}" \
+    | sudo tar -xz -C /usr/local/bin trivy
 fi
 {%- endif %}
 
