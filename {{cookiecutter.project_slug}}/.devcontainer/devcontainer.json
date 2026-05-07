@@ -6,7 +6,7 @@
     "ghcr.io/devcontainers/features/python:1": {
       "version": "3.12.1"
     }{% endif %}{% if cookiecutter.with_docker == 'true' or cookiecutter.with_build == 'true' %},
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {}{% endif %}
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}{% endif %}
   },
   "postCreateCommand": "bash .devcontainer/setup.sh",
   "customizations": {

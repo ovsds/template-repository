@@ -17,6 +17,11 @@ jobs:
 
     permissions:
       contents: read
+{%- if cookiecutter.with_zizmor == 'true' %}
+
+    env:
+      GH_TOKEN: ${{ "{{" }} secrets.GITHUB_TOKEN }} # Required for Zizmor
+{%- endif %}
 
     steps:
       - name: Checkout repository
@@ -24,54 +29,43 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup Environment
-        uses: ./.github/actions/setup_environment
-        {%- if cookiecutter.with_python == 'true' or cookiecutter.with_cookiecutter == 'true' or cookiecutter.with_zizmor == 'true' %}
+      - name: Lint
+        uses: devcontainers/ci@v0.3
         with:
-        {%- endif %}
-        {%- if cookiecutter.with_python == 'true' %}
-          python-enabled: true
-          poetry-enabled: true
-        {%- endif %}
-        {%- if cookiecutter.with_cookiecutter == 'true' %}
-          cookiecutter-enabled: true
-        {%- endif %}
-        {%- if cookiecutter.with_zizmor == 'true' %}
-          zizmor-enabled: true
-        {%- endif %}
-
-      - name: Install Dependencies
-        run: |
-          task init
-
-      - name: Lint PR
-        run: |
-          task lint
-        {%- if cookiecutter.with_zizmor == 'true' %}
-        env:
-          GH_TOKEN: ${{ "{{" }} secrets.GITHUB_TOKEN }} # Required for Zizmor
-        {%- endif %}
-      {%- if cookiecutter.with_docker == 'true' %}
+          runCmd: task lint
+          {%- if cookiecutter.with_zizmor == 'true' %}
+          env: |
+            GH_TOKEN
+          {%- endif %}
+{%- if cookiecutter.with_docker == 'true' %}
 
       - name: Prepare auxiliary containers
-        working-directory: docker
-        run: |
-          task build
-          task start
+        uses: devcontainers/ci@v0.3
         env:
           ENVIRONMENT: CI
-      {%- endif %}
+        with:
+          runCmd: cd docker && task build && task start
+          env: |
+            ENVIRONMENT
+{%- endif %}
 
-      - name: Test PR
-        run: |
-          task test
-      {%- if cookiecutter.with_docker == 'true' %}
+      - name: Test
+        uses: devcontainers/ci@v0.3
+        with:
+          runCmd: task test
+          {%- if cookiecutter.with_zizmor == 'true' %}
+          env: |
+            GH_TOKEN
+          {%- endif %}
+{%- if cookiecutter.with_docker == 'true' %}
 
       - name: Clean up auxiliary containers
         if: success() || failure()
-        working-directory: docker
-        run: |
-          task clean
+        uses: devcontainers/ci@v0.3
         env:
           ENVIRONMENT: CI
-      {%- endif %}
+        with:
+          runCmd: cd docker && task clean
+          env: |
+            ENVIRONMENT
+{%- endif %}

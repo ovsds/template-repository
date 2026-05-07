@@ -24,11 +24,6 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup Environment
-        uses: ./.github/actions/setup_environment
-        with:
-          trivy-enabled: true
-
       - name: Get latest image tag
         id: get_tag
         uses: pozetroninc/github-action-get-latest-release@v0.8.0
@@ -39,14 +34,29 @@ jobs:
 
       - name: Scan image for vulnerabilities
         id: scan
-        uses: ovsds/run-with-output-action@v1
         continue-on-error: true
+        uses: devcontainers/ci@v0.3
+        env:
+          IMAGE_REGISTRY: ghcr.io/${{ "{{" }} github.repository_owner }}
+          IMAGE_NAME: ${{ "{{" }} github.event.repository.name }}
+          IMAGE_TAG: ${{ "{{" }} steps.get_tag.outputs.release }}
         with:
-          run: |
-            IMAGE_REGISTRY="ghcr.io/${{ "{{" }} github.repository_owner }}" \
-            IMAGE_NAME="${{ "{{" }} github.event.repository.name }}" \
-            IMAGE_TAG="${{ "{{" }} steps.get_tag.outputs.release }}" \
-            task ci-image-scan
+          runCmd: |
+            task ci-image-scan | tee scan-output.txt
+          env: |
+            IMAGE_REGISTRY
+            IMAGE_NAME
+            IMAGE_TAG
+
+      - name: Capture scan output
+        id: scan-output
+        if: always()
+        run: |
+          {
+            echo 'stdout<<EOF'
+            cat scan-output.txt 2>/dev/null || echo "(scan output unavailable)"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
 
       - name: Report vulnerabilities
         uses: ovsds/create-or-update-unique-issue-action@v1
@@ -55,7 +65,7 @@ jobs:
           body: |
             ## Vulnerabilities found
             ```
-            ${{ "{{" }} steps.scan.outputs.stdout }}
+            ${{ "{{" }} steps.scan-output.outputs.stdout }}
             ```
           unique-title-includes: "Security scan issues for "
-          close: ${{ "{{" }} steps.scan.outputs.exit_code == 0 }}
+          close: ${{ "{{" }} steps.scan.outcome == 'success' }}

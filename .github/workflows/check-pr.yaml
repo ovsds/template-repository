@@ -18,32 +18,25 @@ jobs:
     permissions:
       contents: read
 
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required for Zizmor
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           persist-credentials: false
 
-      - name: Setup Environment
-        uses: ./.github/actions/setup_environment
+      - name: Lint
+        uses: devcontainers/ci@v0.3
         with:
-          python-enabled: true
-          poetry-enabled: true
-          cookiecutter-enabled: true
-          zizmor-enabled: true
+          runCmd: task lint
+          env: |
+            GH_TOKEN
 
-      - name: Install Dependencies
-        run: |
-          task init
-
-      - name: Lint PR
-        run: |
-          task lint
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required for Zizmor
-
-      - name: Test PR
-        run: |
-          task test
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required for Zizmor
+      - name: Test
+        uses: devcontainers/ci@v0.3
+        with:
+          runCmd: task test
+          env: |
+            GH_TOKEN
