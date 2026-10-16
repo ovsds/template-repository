@@ -28,3 +28,4 @@ if __name__ == "__main__":
 
     # Remove files from older versions
     remove_file(".husky/.huskyrc", missing_ok=True)
+    remove_file(".nvmrc", missing_ok=True)

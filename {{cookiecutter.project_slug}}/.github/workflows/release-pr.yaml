@@ -28,8 +28,6 @@ jobs:
 
       - name: Setup Environment
         uses: $/.github/actions/setup_environment
-        with:
-          trivy-enabled: true
 
       - name: Get Image Data
         id: get-image-data

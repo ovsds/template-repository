@@ -12,21 +12,17 @@ tasks:
     cmds:
       - "{{.NENV}}/.bin/prettier {{.COMMAND}}"
 
-  _with_nvm:
-    internal: true
-    cmds:
-      - bash -c 'source "${HOME}/.nvm/nvm.sh" && nvm install && {{.COMMAND}}'
-
   init:
     desc: Initialize project environment
     cmds:
+      - echo 'Installing mise tools...'
+      - mise install
+
       - echo 'Installing node dependencies...'
-      - task: _with_nvm
-        vars: { COMMAND: "npm install" }
+      - npm install
 
       - echo 'Installing husky pre-commit...'
-      - task: _with_nvm
-        vars: { COMMAND: "npm run prepare" }
+      - npm run prepare
 
   lint:
     desc: Lint project
@@ -66,18 +62,21 @@ tasks:
   dependencies-update:
     desc: Update dependencies
     cmds:
+      - echo 'Updating mise tools...'
+      - mise upgrade --bump
+
       - echo 'Updating node dependencies...'
-      - task: _with_nvm
-        vars: { COMMAND: "npm update" }
+      - npm update
 
   dependencies-check:
     desc: Check dependencies
     cmds:
+      - echo 'Checking mise tools...'
+      - mise outdated
+
       - echo 'Checking node dependencies...'
-      - task: _with_nvm
-        vars: { COMMAND: "npm outdated" }
-      - task: _with_nvm
-        vars: { COMMAND: "npm audit" }
+      - npm outdated
+      - npm audit
 
   update-from-template:
     desc: Update project from template
