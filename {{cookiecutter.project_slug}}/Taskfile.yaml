@@ -41,7 +41,8 @@ tasks:
   _with_nvm:
     internal: true
     cmds:
-      - "source ${HOME}/.nvm/nvm.sh && nvm install && {{ "{{" }}.COMMAND}}"
+      # nvm.sh is not compatible with task's built-in shell interpreter, so run it in bash
+      - bash -c 'source "${HOME}/.nvm/nvm.sh" && nvm install && {{ "{{" }}.COMMAND}}'
 
   init:
     desc: Initialize project environment
