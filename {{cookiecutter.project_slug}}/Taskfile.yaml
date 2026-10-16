@@ -41,7 +41,6 @@ tasks:
   _with_nvm:
     internal: true
     cmds:
-      # nvm.sh is not compatible with task's built-in shell interpreter, so run it in bash
       - bash -c 'source "${HOME}/.nvm/nvm.sh" && nvm install && {{ "{{" }}.COMMAND}}'
 
   init:
