@@ -52,7 +52,7 @@ inputs:
   zizmor-version:
     description: "Zizmor version"
     required: true
-    default: "1.0.1"
+    default: "1.31.1"
   zizmor-enabled:
     description: "Zizmor enabled"
     required: true
@@ -64,20 +64,20 @@ runs:
   steps:
     - name: Setup Task
       if: ${{ "{{" }} inputs.task-enabled == 'true' }}
-      uses: arduino/setup-task@v2.0.0
+      uses: arduino/setup-task@b91d5d2c96a56797b48ac1e0e89220bf64044611 # v2.0.0
       with:
         version: ${{ "{{" }} inputs.task-version }}
 {%- if cookiecutter.with_python == 'true' %}
 
     - name: Setup Python
       if: ${{ "{{" }} inputs.python-enabled == 'true' }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4.9.1
       with:
         python-version: ${{ "{{" }} inputs.python-version }}
 
     - name: Setup Poetry
       if: ${{ "{{" }} inputs.poetry-enabled == 'true' }}
-      uses: snok/install-poetry@v1
+      uses: snok/install-poetry@a783c322200f0519c7926aa6faa857c4e23e9263 # v1.4.2
       with:
         version: ${{ "{{" }} inputs.poetry-version }}
 {%- endif %}
@@ -96,9 +96,9 @@ runs:
 
     - name: Setup Trivy
       if: ${{ "{{" }} inputs.trivy-enabled == 'true' }}
-      uses: aquasecurity/setup-trivy@v0.2.2
+      uses: aquasecurity/setup-trivy@81e514348e19b6112ce2a7e3ecbafe19c1e1f567 # v0.3.1
       with:
-        version: ${{ "{{" }} inputs.trivy-version }}
+        version: ${{ "{{" }} inputs.trivy-version }} # zizmor: ignore[unpinned-tools] trivy-version defaults to a pinned version
 {%- endif %}
 {%- if cookiecutter.with_zizmor == 'true' %}
 
