@@ -20,12 +20,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           persist-credentials: false
 
       - name: Setup Environment
-        uses: ./.github/actions/setup_environment
+        uses: $/.github/actions/setup_environment
         {%- if cookiecutter.with_python == 'true' or cookiecutter.with_cookiecutter == 'true' or cookiecutter.with_zizmor == 'true' %}
         with:
         {%- endif %}

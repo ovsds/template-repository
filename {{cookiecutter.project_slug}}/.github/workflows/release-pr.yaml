@@ -22,12 +22,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           persist-credentials: false
 
       - name: Setup Environment
-        uses: ./.github/actions/setup_environment
+        uses: $/.github/actions/setup_environment
         with:
           trivy-enabled: true
 
@@ -41,7 +41,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
         with:
           registry: ghcr.io
           username: ${{ "{{" }} github.actor }}
@@ -60,7 +60,7 @@ jobs:
 
       - name: Scan image
         id: scan
-        uses: ovsds/run-with-output-action@v1
+        uses: ovsds/run-with-output-action@9bc0dcb1df5b70d1704c709f9cc0f40d260a5f40 # v1.4.0
         continue-on-error: true
         with:
           run: |
@@ -70,7 +70,7 @@ jobs:
             task ci-image-scan
 
       - name: Report vulnerabilities
-        uses: ovsds/create-or-update-unique-comment-action@v1
+        uses: ovsds/create-or-update-unique-comment-action@df30f5f96aa71679deb9eb697c98f39ee9e26651 # v1.1.0
         with:
           issue-number: ${{ "{{" }} github.event.number }}
           body: |
