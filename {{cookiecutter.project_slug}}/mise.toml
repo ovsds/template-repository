@@ -1,0 +1,19 @@
+[tools]
+task = "3.54.0"
+node = "{{ cookiecutter.node_version.lstrip('v') }}"
+{%- if cookiecutter.with_python == 'true' or cookiecutter.scripts == 'true' or cookiecutter.with_cookiecutter == 'true' %}
+uv = "0.13.1"
+python = "3.12.15"
+{%- endif %}
+{%- if cookiecutter.with_python == 'true' or cookiecutter.scripts == 'true' %}
+"pypi:poetry" = "1.7.1"
+{%- endif %}
+{%- if cookiecutter.with_cookiecutter == 'true' %}
+"pypi:cookiecutter" = "2.4.0"
+{%- endif %}
+{%- if cookiecutter.with_trivy == 'true' %}
+trivy = "0.76.0"
+{%- endif %}
+{%- if cookiecutter.with_zizmor == 'true' %}
+zizmor = "1.31.1"
+{%- endif %}
