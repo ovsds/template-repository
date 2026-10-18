@@ -12,6 +12,7 @@
   "with_cookiecutter": "false",
   "with_trivy": "false",
   "with_zizmor": "false",
+  "with_gitleaks": "false",
   "with_docker": "false",
   "with_build": "false",
   "_empty_guard": ""

@@ -15,6 +15,8 @@ def test_replay(replay: replay_utils.Replay):
     replay_utils.copy_additional_files(replay, ADDITIONAL_FILES_PATH, cwd)
 
     cli_utils.run_command("git init", cwd=cwd)
+    cli_utils.run_command("git add --all", cwd=cwd)
+    cli_utils.run_command("git -c user.name=test -c user.email=test@example.com -c commit.gpgsign=false commit --quiet --no-verify -m init", cwd=cwd)
     cli_utils.run_command("task init", cwd=cwd)
     cli_utils.run_command("task lint", cwd=cwd)
     cli_utils.run_command("task lint-fix", cwd=cwd)

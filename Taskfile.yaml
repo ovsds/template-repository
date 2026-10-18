@@ -34,6 +34,9 @@ tasks:
       - echo 'Running GHA checks...'
       - GH_TOKEN="$(gh auth token)" zizmor .github/*
 
+      - echo 'Running secret scan...'
+      - gitleaks git --log-opts=HEAD --redact --no-banner
+
   lint-fix:
     desc: Lint fix project
     cmds:
@@ -43,6 +46,9 @@ tasks:
 
       - echo 'Running GHA checks...'
       - GH_TOKEN="$(gh auth token)" zizmor .github/*
+
+      - echo 'Running secret scan...'
+      - gitleaks git --log-opts=HEAD --redact --no-banner
 
   test:
     desc: Test project
@@ -98,6 +104,7 @@ tasks:
         with_cookiecutter='true'
         with_trivy='false'
         with_zizmor='true'
+        with_gitleaks='true'
         with_docker='false'
         with_build='false'
     vars:

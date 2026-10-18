@@ -81,6 +81,11 @@ tasks:
       - echo 'Running GHA checks...'
       - GH_TOKEN="$(gh auth token)" zizmor .
 {%- endif %}
+{%- if cookiecutter.with_gitleaks == 'true' %}
+
+      - echo 'Running secret scan...'
+      - gitleaks git --log-opts=HEAD --redact --no-banner
+{%- endif %}
 
   lint-fix:
     desc: Lint fix project
@@ -102,6 +107,11 @@ tasks:
 
       - echo 'Running GHA checks...'
       - GH_TOKEN="$(gh auth token)" zizmor .
+{%- endif %}
+{%- if cookiecutter.with_gitleaks == 'true' %}
+
+      - echo 'Running secret scan...'
+      - gitleaks git --log-opts=HEAD --redact --no-banner
 {%- endif %}
 
   test:
@@ -198,6 +208,7 @@ tasks:
         with_cookiecutter='{{cookiecutter.with_cookiecutter}}'
         with_trivy='{{cookiecutter.with_trivy}}'
         with_zizmor='{{cookiecutter.with_zizmor}}'
+        with_gitleaks='{{cookiecutter.with_gitleaks}}'
         with_docker='{{cookiecutter.with_docker}}'
         with_build='{{cookiecutter.with_build}}'
     vars:
