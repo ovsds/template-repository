@@ -24,6 +24,7 @@ Opt-in via flags in [`cookiecutter.json`](cookiecutter.json):
 | `with_docker=true`       | `docker/` subfolder with its own Taskfile and a base/dev/CI compose layering for auxiliary containers used in CI.                             |
 | `with_python=true`       | Python + Poetry in `mise.toml`; Pyright wired into devDependencies.                                                                           |
 | `with_zizmor=true`       | [Zizmor](https://woodruffw.github.io/zizmor/) in `mise.toml`, GHA security scan integrated into `task lint`.                                  |
+| `with_gitleaks=true`     | [Gitleaks](https://github.com/gitleaks/gitleaks) in `mise.toml`, secret scan of git history integrated into `task lint`.                      |
 | `with_trivy=true`        | Trivy in `mise.toml` (used by the image scan in `Release PR`).                                                                                |
 | `with_cookiecutter=true` | Cookiecutter in `mise.toml` and the project's own `tests/` runner — for when the generated repo is itself a Cookiecutter template.            |
 | `scripts=true`           | `.scripts/` subfolder of shared Python/bash helpers, included into the root Taskfile.                                                         |
