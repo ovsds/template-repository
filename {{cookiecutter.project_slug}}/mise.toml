@@ -52,9 +52,6 @@ zizmor = "1.31.1"
 gitleaks = "8.30.1"
 {%- endif %}
 
-[env]
-_.path = ["node_modules/.bin"]
-
 [settings]
 task.quiet = true
 
@@ -76,7 +73,7 @@ run = [
 description = "Lint project"
 run = [
   "echo 'Running prettier checks...'",
-  "prettier --check .",
+  "npx --no -- prettier --check .",
 {{- fan_out('lint', 'Running scripts checks...') }}
 {%- if cookiecutter.with_zizmor == 'true' %}
 
@@ -94,7 +91,7 @@ run = [
 description = "Lint fix project"
 run = [
   "echo 'Running prettier fixes...'",
-  "prettier --write .",
+  "npx --no -- prettier --write .",
 {{- fan_out('lint-fix', 'Running scripts fixes...') }}
 {%- if cookiecutter.with_zizmor == 'true' %}
 
