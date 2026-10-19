@@ -1,13 +1,22 @@
 {%- set services = cookiecutter.services.split() %}
-{%- set config_roots = [] %}
-{%- if cookiecutter.scripts == 'true' %}{% set _ = config_roots.append('.scripts') %}{% endif %}
-{%- for service in services %}{% set _ = config_roots.append(service) %}{% endfor %}
-{%- if cookiecutter.with_docker == 'true' %}{% set _ = config_roots.append('docker') %}{% endif %}
+{%- set config_roots = (['.scripts'] if cookiecutter.scripts == 'true' else []) + services + (['docker'] if cookiecutter.with_docker == 'true' else []) %}
+{%- macro fan_out(task, scripts_message='') %}
+{%- if scripts_message and cookiecutter.scripts == 'true' %}
+
+  "echo '{{ scripts_message }}'",
+  { task = "//.scripts:{{ task }}" },
+{%- endif %}
+{%- if services %}
+{% for service in services %}
+  { task = "//{{ service }}:{{ task }}" },
+{%- endfor %}
+{%- endif %}
+{%- endmacro %}
 {%- if config_roots -%}
 monorepo_root = true
 
 [monorepo]
-config_roots = [{% for config_root in config_roots %}"{{ config_root }}"{% if not loop.last %}, {% endif %}{% endfor %}]
+config_roots = {{ config_roots | tojson }}
 
 {% endif -%}
 [tools]
@@ -49,16 +58,7 @@ run = [
 
   "echo 'Installing husky pre-commit...'",
   "npm run prepare",
-{%- if cookiecutter.scripts == 'true' %}
-
-  "echo 'Installing .scripts dependencies...'",
-  { task = "//.scripts:init" },
-{%- endif %}
-{%- if services %}
-{% for service in services %}
-  { task = "//{{ service }}:init" },
-{%- endfor %}
-{%- endif %}
+{{- fan_out('init', 'Installing .scripts dependencies...') }}
 ]
 
 [tasks.lint]
@@ -66,16 +66,7 @@ description = "Lint project"
 run = [
   "echo 'Running prettier checks...'",
   "prettier --check .",
-{%- if cookiecutter.scripts == 'true' %}
-
-  "echo 'Running scripts checks...'",
-  { task = "//.scripts:lint" },
-{%- endif %}
-{%- if services %}
-{% for service in services %}
-  { task = "//{{ service }}:lint" },
-{%- endfor %}
-{%- endif %}
+{{- fan_out('lint', 'Running scripts checks...') }}
 {%- if cookiecutter.with_zizmor == 'true' %}
 
   "echo 'Running GHA checks...'",
@@ -93,16 +84,7 @@ description = "Lint fix project"
 run = [
   "echo 'Running prettier fixes...'",
   "prettier --write .",
-{%- if cookiecutter.scripts == 'true' %}
-
-  "echo 'Running scripts fixes...'",
-  { task = "//.scripts:lint-fix" },
-{%- endif %}
-{%- if services %}
-{% for service in services %}
-  { task = "//{{ service }}:lint-fix" },
-{%- endfor %}
-{%- endif %}
+{{- fan_out('lint-fix', 'Running scripts fixes...') }}
 {%- if cookiecutter.with_zizmor == 'true' %}
 
   "echo 'Running GHA checks...'",
@@ -122,11 +104,7 @@ run = [
 {%- if cookiecutter.with_cookiecutter == 'true' %}
   "python -m tests",
 {%- endif %}
-{%- if services %}
-{% for service in services %}
-  { task = "//{{ service }}:test" },
-{%- endfor %}
-{%- endif %}
+{{- fan_out('test') }}
 ]
 
 [tasks.clean]
@@ -134,16 +112,7 @@ description = "Clean project environment"
 run = [
   "echo 'Cleaning node dependencies...'",
   "rm -rf node_modules",
-{%- if cookiecutter.scripts == 'true' %}
-
-  "echo 'Cleaning .scripts dependencies...'",
-  { task = "//.scripts:clean" },
-{%- endif %}
-{%- if services %}
-{% for service in services %}
-  { task = "//{{ service }}:clean" },
-{%- endfor %}
-{%- endif %}
+{{- fan_out('clean', 'Cleaning .scripts dependencies...') }}
 {%- if cookiecutter.with_cookiecutter == 'true' %}
 
   "echo 'Cleaning test results...'",
@@ -159,16 +128,7 @@ run = [
 
   "echo 'Updating node dependencies...'",
   "npm update",
-{%- if cookiecutter.scripts == 'true' %}
-
-  "echo 'Updating .scripts dependencies...'",
-  { task = "//.scripts:dependencies-update" },
-{%- endif %}
-{%- if services %}
-{% for service in services %}
-  { task = "//{{ service }}:dependencies-update" },
-{%- endfor %}
-{%- endif %}
+{{- fan_out('dependencies-update', 'Updating .scripts dependencies...') }}
 ]
 
 [tasks.dependencies-check]
@@ -180,16 +140,7 @@ run = [
   "echo 'Checking node dependencies...'",
   "npm outdated",
   "npm audit",
-{%- if cookiecutter.scripts == 'true' %}
-
-  "echo 'Checking .scripts dependencies...'",
-  { task = "//.scripts:dependencies-check" },
-{%- endif %}
-{%- if services %}
-{% for service in services %}
-  { task = "//{{ service }}:dependencies-check" },
-{%- endfor %}
-{%- endif %}
+{{- fan_out('dependencies-check', 'Checking .scripts dependencies...') }}
 ]
 
 [tasks.update-from-template]

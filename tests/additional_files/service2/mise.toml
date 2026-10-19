@@ -5,21 +5,16 @@ run = "echo 'service2:init'"
 run = "echo 'service2:lint'"
 
 [tasks.lint-fix]
-description = "Lint fix project"
 run = "echo 'service2:lint-fix'"
 
 [tasks.test]
-description = "Test project"
 run = "echo 'service2:test'"
 
 [tasks.clean]
-description = "Clean project environment"
 run = "echo 'service2:clean'"
 
 [tasks.dependencies-update]
-description = "Update dependencies"
 run = "echo 'service2:dependencies-update'"
 
 [tasks.dependencies-check]
-description = "Check dependencies"
 run = "echo 'service2:dependencies-check'"

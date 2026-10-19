@@ -26,9 +26,10 @@ run = [{ task = "compose logs --follow" }]
 description = "Check all containers"
 run = '''
 services="$(mise run compose config --services)"
+running="$(mise run compose ps --services --status running)"
 for service in $services; do
   echo -n "Checking service $service..."
-  mise run compose ps --services --status running |
+  printf '%s\n' "$running" |
     grep -q "$service" && echo "OK" ||
     { echo "ERROR: service not found"; exit 1; }
 done
