@@ -1,0 +1,20 @@
+[tasks.init]
+run = "echo 'parent/child:init'"
+
+[tasks.lint]
+run = "echo 'parent/child:lint'"
+
+[tasks.lint-fix]
+run = "echo 'parent/child:lint-fix'"
+
+[tasks.test]
+run = "echo 'parent/child:test'"
+
+[tasks.clean]
+run = "echo 'parent/child:clean'"
+
+[tasks.dependencies-update]
+run = "echo 'parent/child:dependencies-update'"
+
+[tasks.dependencies-check]
+run = "echo 'parent/child:dependencies-check'"

@@ -22,6 +22,13 @@
       "additional_files": ["service1/", "service2/"]
     },
     {
+      "name": "Nested Services",
+      "parameters": {
+        "services": "parent parent/child"
+      },
+      "additional_files": ["parent/"]
+    },
+    {
       "name": "With Python",
       "parameters": {
         "with_python": "true"

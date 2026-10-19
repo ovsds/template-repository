@@ -1,0 +1,20 @@
+[tasks.init]
+run = ["echo 'parent:init'", { task = "//parent/child:init" }]
+
+[tasks.lint]
+run = ["echo 'parent:lint'", { task = "//parent/child:lint" }]
+
+[tasks.lint-fix]
+run = ["echo 'parent:lint-fix'", { task = "//parent/child:lint-fix" }]
+
+[tasks.test]
+run = ["echo 'parent:test'", { task = "//parent/child:test" }]
+
+[tasks.clean]
+run = ["echo 'parent:clean'", { task = "//parent/child:clean" }]
+
+[tasks.dependencies-update]
+run = ["echo 'parent:dependencies-update'", { task = "//parent/child:dependencies-update" }]
+
+[tasks.dependencies-check]
+run = ["echo 'parent:dependencies-check'", { task = "//parent/child:dependencies-check" }]
