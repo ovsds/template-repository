@@ -21,16 +21,3 @@ run = [{ task = "compose down --rmi all --volumes --remove-orphans" }]
 [tasks.show-logs]
 description = "Show logs for all containers"
 run = [{ task = "compose logs --follow" }]
-
-[tasks.check]
-description = "Check all containers"
-run = '''
-services="$(mise run compose config --services)"
-running="$(mise run compose ps --services --status running)"
-for service in $services; do
-  echo -n "Checking service $service..."
-  printf '%s\n' "$running" |
-    grep -qxF -- "$service" && echo "OK" ||
-    { echo "ERROR: service not found"; exit 1; }
-done
-'''
