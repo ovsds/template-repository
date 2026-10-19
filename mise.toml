@@ -10,9 +10,6 @@ python = "3.12.15"
 zizmor = "1.31.1"
 gitleaks = "8.30.1"
 
-[env]
-_.path = ["node_modules/.bin"]
-
 [settings]
 task.quiet = true
 
@@ -33,7 +30,7 @@ run = [
 description = "Lint project"
 run = [
   "echo 'Running prettier checks...'",
-  "prettier --check .",
+  "npx --no -- prettier --check .",
 
   "echo 'Running GHA checks...'",
   'GH_TOKEN="$(gh auth token)" zizmor .github/*',
@@ -46,7 +43,7 @@ run = [
 description = "Lint fix project"
 run = [
   "echo 'Running prettier fixes...'",
-  "prettier --write .",
+  "npx --no -- prettier --write .",
 
   "echo 'Running GHA checks...'",
   'GH_TOKEN="$(gh auth token)" zizmor .github/*',
