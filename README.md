@@ -30,6 +30,9 @@ Opt-in via flags in [`cookiecutter.json`](cookiecutter.json):
 | `scripts=true`           | `.scripts/` subfolder of shared Python/bash helpers, a [monorepo config root](https://mise.jdx.dev/tasks/monorepo.html) whose tasks the root ones call.                                                                                                     |
 | `services="a b c"`       | Multi-service workspace — each service is a monorepo config root whose `mise.toml` implements `init`, `lint`, `lint-fix`, `test`, `clean`, `dependencies-update` and `dependencies-check`; the root tasks fan out to all of them and fail on a missing one. |
 
+A service nested in another one (`services="a a/b"`) is only a config root: the root tasks fan out to `a`, whose own
+tasks fan out to `a/b`.
+
 `mise run update-from-template` re-applies the template to an existing repo with the same answers, so scaffold improvements can be pulled in over time.
 
 Project-specific tasks go into `mise-tasks/` as file tasks, which the template never overwrites; with `with_build=true` the release workflows expect `ci-image-push` and `ci-image-scan` there.
