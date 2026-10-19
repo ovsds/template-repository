@@ -26,9 +26,12 @@ cookiecutter https://github.com/{{ cookiecutter.owner_github_login }}/{{ cookiec
 
 All other tools are pinned in [mise.toml](mise.toml).
 
-### Taskfile commands
+### mise tasks
 
-For all commands see [Taskfile](Taskfile.yaml) or `task --list-all`.
+For all commands see [mise.toml](mise.toml) or `mise tasks ls`.
+{%- if cookiecutter.scripts == 'true' or cookiecutter.services != '' or cookiecutter.with_docker == 'true' %}
+`mise tasks ls --all` also lists the tasks of the sub-directory config roots, run them from the root as `mise run //<dir>:<task>`.
+{%- endif %}
 
 ## License
 

@@ -34,7 +34,7 @@ jobs:
           password: ${{ "{{" }} secrets.GITHUB_TOKEN }}
 
       - name: Configure Docker Builder
-        run: task configure-builder
+        run: mise run configure-builder
 
       - name: Build image
         env:
@@ -42,4 +42,4 @@ jobs:
           IMAGE_NAME: ${{ "{{" }} github.event.repository.name }}
           IMAGE_TAG: ${{ "{{" }} github.event.release.tag_name }}
         run: |
-          task ci-image-push
+          mise run ci-image-push

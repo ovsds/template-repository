@@ -1,0 +1,25 @@
+[tasks.init]
+run = "echo 'service1:init'"
+
+[tasks.lint]
+run = "echo 'service1:lint'"
+
+[tasks.lint-fix]
+description = "Lint fix project"
+run = "echo 'service1:lint-fix'"
+
+[tasks.test]
+description = "Test project"
+run = "echo 'service1:test'"
+
+[tasks.clean]
+description = "Clean project environment"
+run = "echo 'service1:clean'"
+
+[tasks.dependencies-update]
+description = "Update dependencies"
+run = "echo 'service1:dependencies-update'"
+
+[tasks.dependencies-check]
+description = "Check dependencies"
+run = "echo 'service1:dependencies-check'"

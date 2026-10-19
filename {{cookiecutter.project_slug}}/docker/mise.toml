@@ -1,0 +1,35 @@
+[tasks.build]
+description = "Build all containers"
+run = [{ task = "compose build" }]
+
+[tasks.config]
+description = "Print resulting configuration"
+run = [{ task = "compose config" }]
+
+[tasks.start]
+description = "Start all containers detached"
+run = [{ task = "compose up --detach" }]
+
+[tasks.stop]
+description = "Stop all containers"
+run = [{ task = "compose down" }]
+
+[tasks.clean]
+description = "Stop and remove all containers"
+run = [{ task = "compose down --rmi all --volumes --remove-orphans" }]
+
+[tasks.show-logs]
+description = "Show logs for all containers"
+run = [{ task = "compose logs --follow" }]
+
+[tasks.check]
+description = "Check all containers"
+run = '''
+services="$(mise run compose config --services)"
+for service in $services; do
+  echo -n "Checking service $service..."
+  mise run compose ps --services --status running |
+    grep -q "$service" && echo "OK" ||
+    { echo "ERROR: service not found"; exit 1; }
+done
+'''
