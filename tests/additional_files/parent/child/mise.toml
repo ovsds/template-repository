@@ -1,11 +1,12 @@
+# lint and lint-fix fail when run twice in one run, as they would if the root also fanned out to this nested service
 [tasks.init]
 run = "echo 'parent/child:init'"
 
 [tasks.lint]
-run = "echo 'parent/child:lint'"
+run = "mkdir .lint-ran"
 
 [tasks.lint-fix]
-run = "echo 'parent/child:lint-fix'"
+run = "mkdir .lint-fix-ran"
 
 [tasks.test]
 run = "echo 'parent/child:test'"

@@ -1,14 +1,11 @@
 {%- set services = cookiecutter.services.split() %}
 {#- A service nested in another one is only a config root; its parent's own tasks fan out to it #}
-{%- set ns = namespace(top_services=[], nested=false) %}
+{%- set ns = namespace(top_services=[]) %}
 {%- for service in services %}
-{%- set ns.nested = false %}
 {%- for parent in services if service.startswith(parent ~ '/') %}
-{%- set ns.nested = true %}
-{%- endfor %}
-{%- if not ns.nested %}
+{%- else %}
 {%- set ns.top_services = ns.top_services + [service] %}
-{%- endif %}
+{%- endfor %}
 {%- endfor %}
 {%- set config_roots = (['.scripts'] if cookiecutter.scripts == 'true' else []) + services + (['docker'] if cookiecutter.with_docker == 'true' else []) %}
 {%- macro fan_out(task, scripts_message='') %}
