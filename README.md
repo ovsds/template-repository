@@ -9,8 +9,8 @@ A [Cookiecutter](https://cookiecutter.readthedocs.io/) template that bootstraps 
 Every generated repo includes, regardless of options:
 
 - **MIT `LICENSE`** stamped with the configured owner; standard `.editorconfig`, `.gitignore`, `.npmrc`, `.prettierignore`.
-- **`mise.toml`** pinning the whole toolchain (Task, Node from `node_version`, and the tools enabled by the flags below), so `mise install` is the only setup step locally and in CI.
-- **`Taskfile.yaml`** as the unified entry point — `task init`, `task lint`, `task lint-fix`, `task test`, `task clean`, `task dependencies-update`, `task dependencies-check`, `task update-from-template`.
+- **`mise.toml`** pinning the whole toolchain (Node from `node_version`, and the tools enabled by the flags below), so `mise install` is the only setup step locally and in CI.
+- **[mise tasks](https://mise.jdx.dev/tasks/)** in the same `mise.toml` as the unified entry point — `mise run init`, `mise run lint`, `mise run lint-fix`, `mise run test`, `mise run clean`, `mise run dependencies-update`, `mise run dependencies-check`, `mise run update-from-template`.
 - **Husky hooks** wiring `pre-commit` through `lint-staged` (Prettier `--check` over `*.{md,yaml,json,js}`) and `commit-msg` through [commitlint](https://commitlint.js.org/) with `@commitlint/config-conventional`.
 - **GitHub Actions:**
   - `Check PR` — installs deps, lints, tests on every PR. Toolchain setup factored into a reusable composite action at `.github/actions/setup_environment`, which installs `mise.toml` tools with [`jdx/mise-action`](https://github.com/jdx/mise-action).
@@ -18,19 +18,23 @@ Every generated repo includes, regardless of options:
 
 Opt-in via flags in [`cookiecutter.json`](cookiecutter.json):
 
-| Flag                     | Adds                                                                                                                                          |
-| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `with_build=true`        | `Release` + `Release PR` workflows — build & push images to GHCR; PR builds get a Trivy scan whose results are posted as a sticky PR comment. |
-| `with_docker=true`       | `docker/` subfolder with its own Taskfile and a base/dev/CI compose layering for auxiliary containers used in CI.                             |
-| `with_python=true`       | Python + Poetry in `mise.toml`; Pyright wired into devDependencies.                                                                           |
-| `with_zizmor=true`       | [Zizmor](https://woodruffw.github.io/zizmor/) in `mise.toml`, GHA security scan integrated into `task lint`.                                  |
-| `with_gitleaks=true`     | [Gitleaks](https://github.com/gitleaks/gitleaks) in `mise.toml`, secret scan of git history integrated into `task lint`.                      |
-| `with_trivy=true`        | Trivy in `mise.toml` (used by the image scan in `Release PR`).                                                                                |
-| `with_cookiecutter=true` | Cookiecutter in `mise.toml` and the project's own `tests/` runner — for when the generated repo is itself a Cookiecutter template.            |
-| `scripts=true`           | `.scripts/` subfolder of shared Python/bash helpers, included into the root Taskfile.                                                         |
-| `services="a b c"`       | Multi-service workspace — each service gets its own Taskfile; `init` / `lint` / `test` / `clean` are fanned out across all of them.           |
+| Flag                     | Adds                                                                                                                                                                                                                                                        |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `with_build=true`        | `Release` + `Release PR` workflows — build & push images to GHCR; PR builds get a Trivy scan whose results are posted as a sticky PR comment.                                                                                                               |
+| `with_docker=true`       | `docker/` subfolder with its own mise tasks and a base/dev/CI compose layering for auxiliary containers used in CI.                                                                                                                                         |
+| `with_python=true`       | Python + Poetry in `mise.toml`; Pyright wired into devDependencies.                                                                                                                                                                                         |
+| `with_zizmor=true`       | [Zizmor](https://woodruffw.github.io/zizmor/) in `mise.toml`, GHA security scan integrated into `mise run lint`.                                                                                                                                            |
+| `with_gitleaks=true`     | [Gitleaks](https://github.com/gitleaks/gitleaks) in `mise.toml`, secret scan of git history integrated into `mise run lint`.                                                                                                                                |
+| `with_trivy=true`        | Trivy in `mise.toml` (used by the image scan in `Release PR`).                                                                                                                                                                                              |
+| `with_cookiecutter=true` | Cookiecutter in `mise.toml` and the project's own `tests/` runner — for when the generated repo is itself a Cookiecutter template.                                                                                                                          |
+| `scripts=true`           | `.scripts/` subfolder of shared Python/bash helpers, a [monorepo config root](https://mise.jdx.dev/tasks/monorepo.html) whose tasks the root ones call.                                                                                                     |
+| `services="a b c"`       | Multi-service workspace — each service is a monorepo config root whose `mise.toml` implements `init`, `lint`, `lint-fix`, `test`, `clean`, `dependencies-update` and `dependencies-check`; the root tasks fan out to all of them and fail on a missing one. |
 
-`task update-from-template` re-applies the template to an existing repo with the same answers, so scaffold improvements can be pulled in over time.
+`mise run update-from-template` re-applies the template to an existing repo with the same answers, so scaffold improvements can be pulled in over time.
+
+Project-specific tasks go into `mise-tasks/` as file tasks, which the template never overwrites; with `with_build=true` the release workflows expect `ci-image-push` and `ci-image-scan` there.
+
+Upgrading a repository generated with Taskfile: `update-from-template` removes the template's own Taskfiles, but each service's `Taskfile.yaml` has to be ported to its `mise.toml` by hand, in the same change, since `task` is no longer installed.
 
 ## Quickstart
 
@@ -59,9 +63,9 @@ You'll be prompted for `project_name`, `node_version`, owner identity, and the f
 
 All other tools are pinned in [mise.toml](mise.toml).
 
-### Taskfile commands
+### mise tasks
 
-For all commands see [Taskfile](Taskfile.yaml) or `task --list-all`.
+For all commands see [mise.toml](mise.toml) or `mise tasks ls`.
 
 ## License
 

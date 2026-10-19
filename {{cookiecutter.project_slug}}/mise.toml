@@ -1,5 +1,28 @@
+{%- set services = cookiecutter.services.split() %}
+{%- set config_roots = (['.scripts'] if cookiecutter.scripts == 'true' else []) + services + (['docker'] if cookiecutter.with_docker == 'true' else []) %}
+{%- macro fan_out(task, scripts_message='') %}
+{%- if scripts_message and cookiecutter.scripts == 'true' %}
+
+  "echo '{{ scripts_message }}'",
+  { task = "//.scripts:{{ task }}" },
+{%- endif %}
+{%- if services %}
+{% for service in services %}
+  { task = "//{{ service }}:{{ task }}" },
+{%- endfor %}
+{%- endif %}
+{%- endmacro -%}
+# monorepo config roots and `//<root>:<task>` references need a recent mise
+min_version = "2026.10.3"
+
+{% if config_roots -%}
+monorepo_root = true
+
+[monorepo]
+config_roots = {{ config_roots | tojson }}
+
+{% endif -%}
 [tools]
-task = "3.54.0"
 node = "{{ cookiecutter.node_version.lstrip('v') }}"
 {%- if cookiecutter.with_python == 'true' or cookiecutter.scripts == 'true' or cookiecutter.with_cookiecutter == 'true' %}
 uv = "0.13.1"
@@ -19,4 +42,143 @@ zizmor = "1.31.1"
 {%- endif %}
 {%- if cookiecutter.with_gitleaks == 'true' %}
 gitleaks = "8.30.1"
+{%- endif %}
+
+[env]
+_.path = ["node_modules/.bin"]
+
+[settings]
+task.quiet = true
+
+[tasks.init]
+description = "Initialize project environment"
+run = [
+  "echo 'Installing mise tools...'",
+  "mise install",
+
+  "echo 'Installing node dependencies...'",
+  "npm install",
+
+  "echo 'Installing husky pre-commit...'",
+  "npm run prepare",
+{{- fan_out('init', 'Installing .scripts dependencies...') }}
+]
+
+[tasks.lint]
+description = "Lint project"
+run = [
+  "echo 'Running prettier checks...'",
+  "prettier --check .",
+{{- fan_out('lint', 'Running scripts checks...') }}
+{%- if cookiecutter.with_zizmor == 'true' %}
+
+  "echo 'Running GHA checks...'",
+  'GH_TOKEN="$(gh auth token)" zizmor .',
+{%- endif %}
+{%- if cookiecutter.with_gitleaks == 'true' %}
+
+  "echo 'Running secret scan...'",
+  "gitleaks git --log-opts=HEAD --redact --no-banner",
+{%- endif %}
+]
+
+[tasks.lint-fix]
+description = "Lint fix project"
+run = [
+  "echo 'Running prettier fixes...'",
+  "prettier --write .",
+{{- fan_out('lint-fix', 'Running scripts fixes...') }}
+{%- if cookiecutter.with_zizmor == 'true' %}
+
+  "echo 'Running GHA checks...'",
+  'GH_TOKEN="$(gh auth token)" zizmor .',
+{%- endif %}
+{%- if cookiecutter.with_gitleaks == 'true' %}
+
+  "echo 'Running secret scan...'",
+  "gitleaks git --log-opts=HEAD --redact --no-banner",
+{%- endif %}
+]
+
+[tasks.test]
+description = "Test project"
+run = [
+  "echo 'Running tests...'",
+{%- if cookiecutter.with_cookiecutter == 'true' %}
+  "python -m tests",
+{%- endif %}
+{{- fan_out('test') }}
+]
+
+[tasks.clean]
+description = "Clean project environment"
+run = [
+  "echo 'Cleaning node dependencies...'",
+  "rm -rf node_modules",
+{{- fan_out('clean', 'Cleaning .scripts dependencies...') }}
+{%- if cookiecutter.with_cookiecutter == 'true' %}
+
+  "echo 'Cleaning test results...'",
+  "rm -rf .test_results",
+{%- endif %}
+]
+
+[tasks.dependencies-update]
+description = "Update dependencies"
+run = [
+  "echo 'Updating mise tools...'",
+  "mise upgrade --bump",
+
+  "echo 'Updating node dependencies...'",
+  "npm update",
+{{- fan_out('dependencies-update', 'Updating .scripts dependencies...') }}
+]
+
+[tasks.dependencies-check]
+description = "Check dependencies"
+run = [
+  "echo 'Checking mise tools...'",
+  "mise outdated",
+
+  "echo 'Checking node dependencies...'",
+  "npm outdated",
+  "npm audit",
+{{- fan_out('dependencies-check', 'Checking .scripts dependencies...') }}
+]
+
+[tasks.update-from-template]
+description = "Update project from template; TEMPLATE_PATH=<path> in the environment overrides the source"
+run = [
+  "echo 'Updating project from template...'",
+  '''
+  cookiecutter \
+    --no-input \
+    --overwrite-if-exists \
+    --output-dir ../ \
+    "${TEMPLATE_PATH:-https://github.com/ovsds/template-repository}" \
+    project_name='{{cookiecutter.project_name}}' \
+    project_slug='{{cookiecutter.project_slug}}' \
+    node_version='{{cookiecutter.node_version}}' \
+    github_workflow_runs_on='{{cookiecutter.github_workflow_runs_on}}' \
+    owner_name='{{cookiecutter.owner_name}}' \
+    owner_github_login='{{cookiecutter.owner_github_login}}' \
+    scripts='{{cookiecutter.scripts}}' \
+    services='{{cookiecutter.services}}' \
+    with_python='{{cookiecutter.with_python}}' \
+    with_cookiecutter='{{cookiecutter.with_cookiecutter}}' \
+    with_trivy='{{cookiecutter.with_trivy}}' \
+    with_zizmor='{{cookiecutter.with_zizmor}}' \
+    with_gitleaks='{{cookiecutter.with_gitleaks}}' \
+    with_docker='{{cookiecutter.with_docker}}' \
+    with_build='{{cookiecutter.with_build}}'
+  ''',
+]
+{%- if cookiecutter.with_build == 'true' %}
+
+[tasks.configure-builder]
+description = "Configure buildx for multi-arch builds"
+run = [
+  "echo 'Configuring buildx...'",
+  "docker buildx create --driver docker-container --use",
+]
 {%- endif %}

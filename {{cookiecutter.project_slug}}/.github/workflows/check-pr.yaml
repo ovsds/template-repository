@@ -32,11 +32,11 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          task init
+          mise run init
 
       - name: Lint PR
         run: |
-          task lint
+          mise run lint
         {%- if cookiecutter.with_zizmor == 'true' %}
         env:
           GH_TOKEN: ${{ "{{" }} secrets.GITHUB_TOKEN }} # Required for Zizmor
@@ -46,22 +46,22 @@ jobs:
       - name: Prepare auxiliary containers
         working-directory: docker
         run: |
-          task build
-          task start
+          mise run build
+          mise run start
         env:
           ENVIRONMENT: CI
       {%- endif %}
 
       - name: Test PR
         run: |
-          task test
+          mise run test
       {%- if cookiecutter.with_docker == 'true' %}
 
       - name: Clean up auxiliary containers
         if: success() || failure()
         working-directory: docker
         run: |
-          task clean
+          mise run clean
         env:
           ENVIRONMENT: CI
       {%- endif %}

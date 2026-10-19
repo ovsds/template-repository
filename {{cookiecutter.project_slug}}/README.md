@@ -26,9 +26,9 @@ cookiecutter https://github.com/{{ cookiecutter.owner_github_login }}/{{ cookiec
 
 All other tools are pinned in [mise.toml](mise.toml).
 
-### Taskfile commands
+### mise tasks
 
-For all commands see [Taskfile](Taskfile.yaml) or `task --list-all`.
+For all commands see [mise.toml](mise.toml) or `mise tasks ls`.
 
 ## License
 

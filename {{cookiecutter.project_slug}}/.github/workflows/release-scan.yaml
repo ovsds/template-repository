@@ -44,7 +44,7 @@ jobs:
             IMAGE_REGISTRY="ghcr.io/${{ "{{" }} github.repository_owner }}" \
             IMAGE_NAME="${{ "{{" }} github.event.repository.name }}" \
             IMAGE_TAG="${{ "{{" }} steps.get_tag.outputs.release }}" \
-            task ci-image-scan
+            mise run ci-image-scan
 
       - name: Report vulnerabilities
         uses: ovsds/create-or-update-unique-issue-action@8999e391f74f20449dcc70e94aee731a3938d543 # v1.1.0

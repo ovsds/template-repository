@@ -1,5 +1,7 @@
+# monorepo config roots and `//<root>:<task>` references need a recent mise
+min_version = "2026.10.3"
+
 [tools]
-task = "3.54.0"
 node = "21.5.0"
 uv = "0.13.1"
 python = "3.12.15"
@@ -7,3 +9,113 @@ python = "3.12.15"
 "pypi:cookiecutter" = "2.4.0"
 zizmor = "1.31.1"
 gitleaks = "8.30.1"
+
+[env]
+_.path = ["node_modules/.bin"]
+
+[settings]
+task.quiet = true
+
+[tasks.init]
+description = "Initialize project environment"
+run = [
+  "echo 'Installing mise tools...'",
+  "mise install",
+
+  "echo 'Installing node dependencies...'",
+  "npm install",
+
+  "echo 'Installing husky pre-commit...'",
+  "npm run prepare",
+]
+
+[tasks.lint]
+description = "Lint project"
+run = [
+  "echo 'Running prettier checks...'",
+  "prettier --check .",
+
+  "echo 'Running GHA checks...'",
+  'GH_TOKEN="$(gh auth token)" zizmor .github/*',
+
+  "echo 'Running secret scan...'",
+  "gitleaks git --log-opts=HEAD --redact --no-banner",
+]
+
+[tasks.lint-fix]
+description = "Lint fix project"
+run = [
+  "echo 'Running prettier fixes...'",
+  "prettier --write .",
+
+  "echo 'Running GHA checks...'",
+  'GH_TOKEN="$(gh auth token)" zizmor .github/*',
+
+  "echo 'Running secret scan...'",
+  "gitleaks git --log-opts=HEAD --redact --no-banner",
+]
+
+[tasks.test]
+description = "Test project"
+run = [
+  "echo 'Running tests...'",
+  "python -m tests",
+]
+
+[tasks.clean]
+description = "Clean project environment"
+run = [
+  "echo 'Cleaning node dependencies...'",
+  "rm -rf node_modules",
+
+  "echo 'Cleaning test results...'",
+  "rm -rf .test_results",
+]
+
+[tasks.dependencies-update]
+description = "Update dependencies"
+run = [
+  "echo 'Updating mise tools...'",
+  "mise upgrade --bump",
+
+  "echo 'Updating node dependencies...'",
+  "npm update",
+]
+
+[tasks.dependencies-check]
+description = "Check dependencies"
+run = [
+  "echo 'Checking mise tools...'",
+  "mise outdated",
+
+  "echo 'Checking node dependencies...'",
+  "npm outdated",
+  "npm audit",
+]
+
+[tasks.update-from-template]
+description = "Update project from template; TEMPLATE_PATH=<path> in the environment overrides the source"
+run = [
+  "echo 'Updating project from template...'",
+  '''
+  cookiecutter \
+    --no-input \
+    --overwrite-if-exists \
+    --output-dir ../ \
+    "${TEMPLATE_PATH:-.}" \
+    project_name='Cookiecutter Template for GitHub Repository' \
+    project_slug='template-repository' \
+    node_version='v21.5.0' \
+    owner_name='Dmitry Ovsiannikov' \
+    owner_github_login='ovsds' \
+    scripts='false' \
+    services='' \
+    with_python='true' \
+    with_cookiecutter='true' \
+    with_trivy='false' \
+    with_zizmor='true' \
+    with_gitleaks='true' \
+    with_docker='false' \
+    with_build='false'
+  ''',
+]

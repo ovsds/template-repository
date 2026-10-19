@@ -46,7 +46,7 @@ jobs:
           password: ${{ "{{" }} secrets.GITHUB_TOKEN }}
 
       - name: Configure Docker Builder
-        run: task configure-builder
+        run: mise run configure-builder
 
       - name: Build image
         env:
@@ -54,7 +54,7 @@ jobs:
           IMAGE_NAME: ${{ "{{" }} steps.get-image-data.outputs.name }}
           IMAGE_TAG: ${{ "{{" }} steps.get-image-data.outputs.tag }}
         run: |
-          task ci-image-push
+          mise run ci-image-push
 
       - name: Scan image
         id: scan
@@ -65,7 +65,7 @@ jobs:
             IMAGE_REGISTRY="${{ "{{" }} steps.get-image-data.outputs.registry }}" \
             IMAGE_NAME="${{ "{{" }} steps.get-image-data.outputs.name }}" \
             IMAGE_TAG="${{ "{{" }} steps.get-image-data.outputs.tag }}" \
-            task ci-image-scan
+            mise run ci-image-scan
 
       - name: Report vulnerabilities
         uses: ovsds/create-or-update-unique-comment-action@df30f5f96aa71679deb9eb697c98f39ee9e26651 # v1.1.0
