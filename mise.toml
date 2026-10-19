@@ -1,3 +1,6 @@
+# monorepo config roots and `//<root>:<task>` references need a recent mise
+min_version = "2026.10.3"
+
 [tools]
 node = "21.5.0"
 uv = "0.13.1"
@@ -91,7 +94,7 @@ run = [
 ]
 
 [tasks.update-from-template]
-description = "Update project from template"
+description = "Update project from template; TEMPLATE_PATH=<path> in the environment overrides the source"
 run = [
   "echo 'Updating project from template...'",
   '''

@@ -11,8 +11,11 @@
   { task = "//{{ service }}:{{ task }}" },
 {%- endfor %}
 {%- endif %}
-{%- endmacro %}
-{%- if config_roots -%}
+{%- endmacro -%}
+# monorepo config roots and `//<root>:<task>` references need a recent mise
+min_version = "2026.10.3"
+
+{% if config_roots -%}
 monorepo_root = true
 
 [monorepo]
@@ -144,7 +147,7 @@ run = [
 ]
 
 [tasks.update-from-template]
-description = "Update project from template"
+description = "Update project from template; TEMPLATE_PATH=<path> in the environment overrides the source"
 run = [
   "echo 'Updating project from template...'",
   '''
