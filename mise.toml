@@ -116,4 +116,7 @@ run = [
     with_docker='false' \
     with_build='false'
   ''',
+
+  "echo 'Syncing package-lock.json with the updated package.json...'",
+  "npm install",
 ]

@@ -178,6 +178,9 @@ run = [
     with_docker='{{cookiecutter.with_docker}}' \
     with_build='{{cookiecutter.with_build}}'
   ''',
+
+  "echo 'Syncing package-lock.json with the updated package.json...'",
+  "npm install",
 ]
 {%- if cookiecutter.with_build == 'true' %}
 
