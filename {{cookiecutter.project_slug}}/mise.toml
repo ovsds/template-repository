@@ -180,6 +180,12 @@ run = [
 
   "echo 'Syncing package-lock.json with the updated package.json...'",
   "npm install",
+{%- if cookiecutter.scripts == 'true' %}
+
+  "echo 'Relocking .scripts for the rendered pyproject.toml...'",
+  "rm -rf .scripts/.venv",
+  "cd .scripts && mise exec -- poetry lock",
+{%- endif %}
 ]
 {%- if cookiecutter.with_build == 'true' %}
 
