@@ -2,12 +2,15 @@
   "private": true,
   "name": "{{cookiecutter.project_slug}}",
   "devDependencies": {
-    "@commitlint/cli": "^19.6.1",
-    "@commitlint/config-conventional": "^19.6.0",
+    "@commitlint/cli": "^20.0.0",
+    "@commitlint/config-conventional": "^20.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.0.0",
     "prettier": "^3.4.2"{% if cookiecutter.with_python == "true" %},
     "pyright": "^1.1.403"{% endif %}
+  },
+  "overrides": {
+    "global-directory": "^4.0.1"
   },
   "hooks": {
     "pre-commit": "lint-staged",
