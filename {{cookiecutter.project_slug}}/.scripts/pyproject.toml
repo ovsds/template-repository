@@ -7,7 +7,7 @@ authors = [{ name = "{{cookiecutter.owner_name}}", email = "{{cookiecutter.owner
 dependencies = ["secret-transfer (>=0.5.0,<0.6.0)"]
 description = "Scripts"
 name = "scripts"
-requires-python = ">={{ cookiecutter.__python_minor }},<{{ cookiecutter.__python_next_minor }}"
+requires-python = ">={{ cookiecutter.__python_minor }}"
 version = "0.1.0"
 
 [[tool.poetry.source]]

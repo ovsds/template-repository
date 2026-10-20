@@ -17,6 +17,5 @@
   "with_docker": "false",
   "with_build": "false",
   "__python_minor": "{{ cookiecutter.python_version.split('.')[:2] | join('.') }}",
-  "__python_next_minor": "{{ cookiecutter.python_version.split('.')[0] }}.{{ cookiecutter.python_version.split('.')[1] | int + 1 }}",
   "_empty_guard": ""
 }

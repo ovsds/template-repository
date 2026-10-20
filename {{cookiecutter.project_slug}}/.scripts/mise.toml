@@ -1,6 +1,3 @@
-[tools]
-python = "{{ cookiecutter.python_version }}"
-
 [tasks.init]
 description = "Initialize environment"
 run = [

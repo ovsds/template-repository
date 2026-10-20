@@ -9,7 +9,7 @@ A [Cookiecutter](https://cookiecutter.readthedocs.io/) template that bootstraps 
 Every generated repo includes, regardless of options:
 
 - **MIT `LICENSE`** stamped with the configured owner; standard `.editorconfig`, `.gitignore`, `.npmrc`, `.prettierignore`.
-- **`mise.toml`** pinning the whole toolchain (Node from `node_version`, Python from `python_version`, e.g. `3.15.0`, when a flag below needs it - `.scripts` follows it; keep the services' Python equal to it, or `mise install --monorepo` drops it and Poetry fails to install; and the tools enabled by the flags below), so `mise install` is the only setup step locally and in CI.
+- **`mise.toml`** pinning the whole toolchain (Node from `node_version`, Python from `python_version`, e.g. `3.15.0`, when a flag below needs it - `.scripts` runs on it; keep the services' Python equal to it, or `mise install --monorepo` drops it and Poetry fails to install; and the tools enabled by the flags below), so `mise install` is the only setup step locally and in CI.
 - **[mise tasks](https://mise.jdx.dev/tasks/)** in the same `mise.toml` as the unified entry point — `mise run init`, `mise run lint`, `mise run lint-fix`, `mise run test`, `mise run clean`, `mise run dependencies-update`, `mise run dependencies-check`, `mise run update-from-template`.
 - **Husky hooks** wiring `pre-commit` through `lint-staged` (Prettier `--check` over `*.{md,yaml,json,js}`) and `commit-msg` through [commitlint](https://commitlint.js.org/) with `@commitlint/config-conventional`.
 - **GitHub Actions:**
@@ -36,6 +36,8 @@ tasks fan out to `a/b`.
 `mise run update-from-template` re-applies the template to an existing repo with the same answers, so scaffold improvements can be pulled in over time.
 
 Project-specific tasks go into `mise-tasks/` as file tasks, which the template never overwrites; with `with_build=true` the release workflows expect `ci-image-push` and `ci-image-scan` there.
+
+Upgrading `.scripts` from its own Python 3.12 pin: run `mise run clean`, `mise run lint-fix` and `mise run init` after the first update, which relocks it for secret-transfer 0.5; later updates relock it themselves.
 
 Upgrading a repository generated with Taskfile: `update-from-template` removes the template's own Taskfiles, but each service's `Taskfile.yaml` has to be ported to its `mise.toml` by hand, in the same change, since `task` is no longer installed.
 
