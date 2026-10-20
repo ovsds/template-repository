@@ -20,7 +20,7 @@ run = [
   "mise install",
 
   "echo 'Installing node dependencies...'",
-  "npm install",
+  "npm ci",
 
   "echo 'Installing husky pre-commit...'",
   "npm run prepare",
