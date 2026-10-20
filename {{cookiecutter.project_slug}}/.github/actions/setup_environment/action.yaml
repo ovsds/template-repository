@@ -14,3 +14,16 @@ runs:
       uses: jdx/mise-action@fc42bcc7ddbf51124c30f95a877a0c5168a3bfde # v5.2.1
       with:
         version: ${{ "{{" }} inputs.mise-version }}
+{%- if cookiecutter.scripts == 'true' or cookiecutter.services.split() or cookiecutter.with_docker == 'true' %}
+        # `mise install --monorepo` drops a root tool that a config root pins at another version (the root's python,
+        # which poetry needs): install the root's tools here, the config roots' below, and cache both in the post step
+        monorepo: false
+        cache_save_post: true
+
+    - name: Install config roots' tools
+      shell: bash
+      env:
+        MISE_GITHUB_TOKEN: ${{ "{{" }} github.token }}
+      run: |
+        mise install --monorepo
+{%- endif %}
