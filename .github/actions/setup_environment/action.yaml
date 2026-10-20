@@ -5,12 +5,12 @@ inputs:
   mise-version:
     description: "Mise version, tools are pinned in mise.toml"
     required: true
-    default: "2026.10.11"
+    default: "2026.10.15"
 
 runs:
   using: "composite"
   steps:
     - name: Setup mise
-      uses: jdx/mise-action@9b200bcecbfd6303e69a4a261b2e09e3757440a7 # v5.2.0
+      uses: jdx/mise-action@fc42bcc7ddbf51124c30f95a877a0c5168a3bfde # v5.2.1
       with:
         version: ${{ inputs.mise-version }}

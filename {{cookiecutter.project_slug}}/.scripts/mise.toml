@@ -1,3 +1,7 @@
+# secret-transfer supports Python <3.13 only
+[tools]
+python = "3.12"
+
 [tasks.init]
 description = "Initialize environment"
 run = [
@@ -16,7 +20,7 @@ run = [
 description = "Lint fix"
 run = [
   "echo 'Running poetry autofixes...'",
-  "poetry lock --no-update",
+  "poetry lock",
   "poetry check",
 ]
 
