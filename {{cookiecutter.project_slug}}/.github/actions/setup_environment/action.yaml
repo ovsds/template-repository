@@ -15,15 +15,9 @@ runs:
       with:
         version: ${{ "{{" }} inputs.mise-version }}
 {%- if cookiecutter.scripts == 'true' or cookiecutter.services.split() or cookiecutter.with_docker == 'true' %}
-        # `mise install --monorepo` drops a root tool that a config root pins at another version (the root's python,
-        # which poetry needs): install the root's tools here, the config roots' below, and cache both in the post step
+        # Root tools only: `mise install --monorepo` drops a root tool another config root pins at a different version
+        # (the root's python, which poetry needs); mise installs the config roots' tools when their tasks first run,
+        # and the post step caches them too
         monorepo: false
         cache_save_post: true
-
-    - name: Install config roots' tools
-      shell: bash
-      env:
-        MISE_GITHUB_TOKEN: ${{ "{{" }} github.token }}
-      run: |
-        mise install --monorepo
 {%- endif %}
