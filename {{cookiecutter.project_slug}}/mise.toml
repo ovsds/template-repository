@@ -33,7 +33,7 @@ config_roots = {{ config_roots | tojson }}
 node = "{{ cookiecutter.node_version.lstrip('v') }}"
 {%- if cookiecutter.with_python == 'true' or cookiecutter.scripts == 'true' or cookiecutter.with_cookiecutter == 'true' %}
 uv = "0.13.1"
-python = "3.15.0"
+python = "{{ cookiecutter.python_version }}"
 {%- endif %}
 {%- if cookiecutter.with_python == 'true' or cookiecutter.scripts == 'true' %}
 "pypi:poetry" = "2.5.1"
@@ -163,6 +163,7 @@ run = [
     project_name='{{cookiecutter.project_name}}' \
     project_slug='{{cookiecutter.project_slug}}' \
     node_version='{{cookiecutter.node_version}}' \
+    python_version='{{cookiecutter.python_version}}' \
     github_workflow_runs_on='{{cookiecutter.github_workflow_runs_on}}' \
     owner_name='{{cookiecutter.owner_name}}' \
     owner_github_login='{{cookiecutter.owner_github_login}}' \
