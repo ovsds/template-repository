@@ -9,7 +9,7 @@ A [Cookiecutter](https://cookiecutter.readthedocs.io/) template that bootstraps 
 Every generated repo includes, regardless of options:
 
 - **MIT `LICENSE`** stamped with the configured owner; standard `.editorconfig`, `.gitignore`, `.npmrc`, `.prettierignore`.
-- **`mise.toml`** pinning the whole toolchain (Node from `node_version`, Python from `python_version`, e.g. `3.15.0`, when a flag below needs it - keep it equal to every config root's Python, `.scripts` (3.12) included, or `mise install --monorepo` drops it and Poetry fails to install; and the tools enabled by the flags below), so `mise install` is the only setup step locally and in CI.
+- **`mise.toml`** pinning the whole toolchain (Node from `node_version`, Python from `python_version`, e.g. `3.15.0`, when a flag below needs it - `.scripts` follows it; keep the services' Python equal to it, or `mise install --monorepo` drops it and Poetry fails to install; and the tools enabled by the flags below), so `mise install` is the only setup step locally and in CI.
 - **[mise tasks](https://mise.jdx.dev/tasks/)** in the same `mise.toml` as the unified entry point — `mise run init`, `mise run lint`, `mise run lint-fix`, `mise run test`, `mise run clean`, `mise run dependencies-update`, `mise run dependencies-check`, `mise run update-from-template`.
 - **Husky hooks** wiring `pre-commit` through `lint-staged` (Prettier `--check` over `*.{md,yaml,json,js}`) and `commit-msg` through [commitlint](https://commitlint.js.org/) with `@commitlint/config-conventional`.
 - **GitHub Actions:**

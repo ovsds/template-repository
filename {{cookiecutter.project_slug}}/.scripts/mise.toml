@@ -1,6 +1,5 @@
-# secret-transfer supports Python <3.13 only
 [tools]
-python = "3.12"
+python = "{{ cookiecutter.python_version }}"
 
 [tasks.init]
 description = "Initialize environment"
