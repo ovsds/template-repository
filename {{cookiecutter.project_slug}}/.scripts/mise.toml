@@ -1,6 +1,6 @@
 # secret-transfer supports Python <3.13 only
 [tools]
-python = "3.12.15"
+python = "3.12"
 
 [tasks.init]
 description = "Initialize environment"
