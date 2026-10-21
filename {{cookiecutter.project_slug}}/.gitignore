@@ -10,6 +10,9 @@ node_modules/
 
 # Environment
 .env
+
+# Worktrees and working files
+/artifacts/
 {%- if cookiecutter.with_cookiecutter == 'true' %}
 
 # Test results

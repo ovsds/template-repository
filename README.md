@@ -37,6 +37,8 @@ tasks fan out to `a/b`.
 
 Project-specific tasks go into `mise-tasks/` as file tasks, which the template never overwrites; with `with_build=true` the release workflows expect `ci-image-push` and `ci-image-scan` there.
 
+`mise run clean` removes the whole `artifacts/` folder, worktrees included, and prunes them: uncommitted work in a worktree there is lost.
+
 Upgrading `.scripts` from its own Python 3.12 pin: run `mise run clean`, `mise run lint-fix` and `mise run init` after the first update, which relocks it for secret-transfer 0.5; later updates relock it themselves.
 
 Upgrading a repository generated with Taskfile: `update-from-template` removes the template's own Taskfiles, but each service's `Taskfile.yaml` has to be ported to its `mise.toml` by hand, in the same change, since `task` is no longer installed.

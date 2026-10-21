@@ -11,5 +11,8 @@ node_modules/
 # Environment
 .env
 
+# Worktrees and working files
+/artifacts/
+
 # Test results
 /.test_results/
