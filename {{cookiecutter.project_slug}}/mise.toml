@@ -125,6 +125,10 @@ run = [
   "echo 'Cleaning test results...'",
   "rm -rf .test_results",
 {%- endif %}
+
+  "echo 'Cleaning artifacts and worktrees...'",
+  "rm -rf artifacts",
+  "git worktree prune || true",
 ]
 
 [tasks.dependencies-update]

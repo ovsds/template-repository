@@ -22,7 +22,10 @@ def test_replay(replay: replay_utils.Replay):
     cli_utils.run_command("mise run init", cwd=cwd)
     cli_utils.run_command("mise run lint", cwd=cwd)
     cli_utils.run_command("mise run lint-fix", cwd=cwd)
+    cli_utils.run_command("git worktree add --quiet --detach artifacts/worktrees/test", cwd=cwd)
     cli_utils.run_command("mise run clean", cwd=cwd)
+    assert not os.path.exists(f"{cwd}/artifacts"), "mise run clean left artifacts/"
+    assert not os.path.exists(f"{cwd}/.git/worktrees"), "mise run clean left the worktree registered"
 
     replay_utils.clean_replay(replay, RESULTS_PATH)
 
