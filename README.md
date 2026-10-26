@@ -16,6 +16,8 @@ Every generated repo includes, regardless of options:
   - `Check PR` — installs deps, lints, tests on every PR. Toolchain setup factored into a reusable composite action at `.github/actions/setup_environment`, which installs `mise.toml` tools with [`jdx/mise-action`](https://github.com/jdx/mise-action).
   - `Check PR Title` — enforces conventional-commit titles via [`ovsds/commitlint-pr-title-action`](https://github.com/ovsds/commitlint-pr-title-action).
 
+Generated workflows use the repository variable `RUNS_ON` when set. Otherwise they use the `github_workflow_runs_on` Cookiecutter answer, which defaults to `ubuntu-latest`. Set `RUNS_ON` in the repository's Actions variables to change runners without regenerating the workflows.
+
 Opt-in via flags in [`cookiecutter.json`](cookiecutter.json):
 
 | Flag                     | Adds                                                                                                                                                                                                                                                        |

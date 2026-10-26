@@ -1,4 +1,5 @@
 import os
+import pathlib
 
 import tests.utils.replay as replay_utils
 import tests.utils.cli as cli_utils
@@ -7,6 +8,28 @@ MANIFEST_PATH = "tests/replays.json"
 ADDITIONAL_FILES_PATH = "tests/additional_files"
 RESULTS_PATH = ".test_results"
 NODE_BIN_PATH = "node_modules/.bin"
+RUNNER_RESULTS_PATH = "artifacts/tests/runner-choice"
+
+
+def test_runner_choice():
+    for runner in ("ubuntu-latest", "self-hosted"):
+        parameters = {"project_slug": "runner-choice", "with_build": "true"}
+        if runner != "ubuntu-latest":
+            parameters["github_workflow_runs_on"] = runner
+
+        replay = replay_utils.Replay(name=runner, parameters=parameters, additional_files=[])
+        replay_utils.clean_replay(replay, RUNNER_RESULTS_PATH)
+        try:
+            replay_utils.build_replay(replay, RUNNER_RESULTS_PATH)
+            workflow_dir = pathlib.Path(RUNNER_RESULTS_PATH, "runner-choice", ".github", "workflows")
+            workflows = list(workflow_dir.glob("*.yaml"))
+            assert len(workflows) == 6
+
+            expected = "runs-on: \"${{ vars.RUNS_ON || '" + runner + "' }}\""
+            for workflow in workflows:
+                assert expected in workflow.read_text(encoding="utf-8"), workflow
+        finally:
+            replay_utils.clean_replay(replay, RUNNER_RESULTS_PATH)
 
 
 def test_replay(replay: replay_utils.Replay):
@@ -39,5 +62,6 @@ def test_replays():
 
 
 __all__ = [
+    "test_runner_choice",
     "test_replays",
 ]
