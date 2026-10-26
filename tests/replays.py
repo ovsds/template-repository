@@ -1,5 +1,7 @@
 import os
 import pathlib
+import shlex
+import subprocess
 
 import tests.utils.replay as replay_utils
 import tests.utils.cli as cli_utils
@@ -12,22 +14,39 @@ RUNNER_RESULTS_PATH = "artifacts/tests/runner-choice"
 
 
 def test_runner_choice():
-    for runner in ("ubuntu-latest", "self-hosted"):
+    expression = '"${{ vars.RUNS_ON || \'ubuntu-latest\' }}"'
+    for runner in ("ubuntu-latest", "self-hosted", expression):
         parameters = {"project_slug": "runner-choice", "with_build": "true"}
         if runner != "ubuntu-latest":
-            parameters["github_workflow_runs_on"] = runner
+            parameters["github_workflow_runs_on"] = runner.replace("{{", "{{ '{{' }}")
 
         replay = replay_utils.Replay(name=runner, parameters=parameters, additional_files=[])
         replay_utils.clean_replay(replay, RUNNER_RESULTS_PATH)
         try:
-            replay_utils.build_replay(replay, RUNNER_RESULTS_PATH)
-            workflow_dir = pathlib.Path(RUNNER_RESULTS_PATH, "runner-choice", ".github", "workflows")
+            subprocess.run(
+                ["cookiecutter", "--output-dir", RUNNER_RESULTS_PATH, "--no-input", ".", *[f"{key}={value}" for key, value in parameters.items()]],
+                check=True,
+            )
+            project_dir = pathlib.Path(RUNNER_RESULTS_PATH, "runner-choice")
+            workflow_dir = project_dir / ".github" / "workflows"
             workflows = list(workflow_dir.glob("*.yaml"))
             assert len(workflows) == 6
 
-            expected = "runs-on: \"${{ vars.RUNS_ON || '" + runner + "' }}\""
             for workflow in workflows:
-                assert expected in workflow.read_text(encoding="utf-8"), workflow
+                assert f"runs-on: {runner}" in workflow.read_text(encoding="utf-8"), workflow
+
+            mise_config = (project_dir / "mise.toml").read_text(encoding="utf-8")
+            answer_line = next(line.strip().removesuffix("\\").strip() for line in mise_config.splitlines() if "github_workflow_runs_on=" in line)
+            answer = shlex.split(answer_line)[0]
+            assert answer == f"github_workflow_runs_on={parameters.get('github_workflow_runs_on', runner)}"
+
+            if runner == expression:
+                subprocess.run(
+                    ["cookiecutter", "--output-dir", RUNNER_RESULTS_PATH, "--no-input", "--overwrite-if-exists", ".", "project_slug=runner-choice", "with_build=true", answer],
+                    check=True,
+                )
+                for workflow in workflows:
+                    assert f"runs-on: {runner}" in workflow.read_text(encoding="utf-8"), workflow
         finally:
             replay_utils.clean_replay(replay, RUNNER_RESULTS_PATH)
 

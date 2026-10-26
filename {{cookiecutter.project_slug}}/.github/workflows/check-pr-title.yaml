@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   check-pr-title:
-    runs-on: "${{ "{{" }} vars.RUNS_ON || '{{ cookiecutter.github_workflow_runs_on }}' }}"
+    runs-on: {{ cookiecutter.github_workflow_runs_on }}
 
     permissions:
       contents: read
