@@ -6,7 +6,7 @@ Support scripts collection
 
 ### Global dependencies
 
-- poetry
+- uv (installed by the root mise config)
 - github-cli
 - yacloud-cli
 

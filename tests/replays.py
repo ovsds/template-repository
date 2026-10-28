@@ -19,7 +19,11 @@ def test_replay(replay: replay_utils.Replay):
     cli_utils.run_command("git init", cwd=cwd)
     cli_utils.run_command("git add --all", cwd=cwd)
     cli_utils.run_command("git -c user.name=test -c user.email=test@example.com -c commit.gpgsign=false commit --quiet --no-verify -m init", cwd=cwd)
+    if replay.parameters.get("scripts") == "true":
+        assert not os.path.exists(f"{cwd}/.scripts/uv.lock"), "template rendered a uv lockfile"
     cli_utils.run_command("mise run init", cwd=cwd)
+    if replay.parameters.get("scripts") == "true":
+        assert os.path.exists(f"{cwd}/.scripts/uv.lock"), "mise init did not create a uv lockfile"
     cli_utils.run_command("mise run lint", cwd=cwd)
     cli_utils.run_command("mise run lint-fix", cwd=cwd)
     cli_utils.run_command("git worktree add --quiet --detach artifacts/worktrees/test", cwd=cwd)
