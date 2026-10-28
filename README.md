@@ -9,7 +9,7 @@ A [Cookiecutter](https://cookiecutter.readthedocs.io/) template that bootstraps 
 Every generated repo includes, regardless of options:
 
 - **MIT `LICENSE`** stamped with the configured owner; standard `.editorconfig`, `.gitignore`, `.npmrc`, `.prettierignore`.
-- **`mise.toml`** pinning the whole toolchain (Node from `node_version`, Python from `python_version`, e.g. `3.15.0`, when a flag below needs it - `.scripts` runs on it; keep the services' Python equal to it, or `mise install --monorepo` drops it and Poetry fails to install; and the tools enabled by the flags below), so `mise install` is the only setup step locally and in CI.
+- **`mise.toml`** pinning the whole toolchain (Node from `node_version`, Python from `python_version`, e.g. `3.15.0`, when a flag below needs it - `.scripts` runs on it; keep the services' Python equal to it, or `mise install --monorepo` drops it; and the tools enabled by the flags below), so `mise install` is the only setup step locally and in CI.
 - **[mise tasks](https://mise.jdx.dev/tasks/)** in the same `mise.toml` as the unified entry point — `mise run init`, `mise run lint`, `mise run lint-fix`, `mise run test`, `mise run clean`, `mise run dependencies-update`, `mise run dependencies-check`, `mise run update-from-template`.
 - **Husky hooks** wiring `pre-commit` through `lint-staged` (Prettier `--check` over `*.{md,yaml,json,js}`) and `commit-msg` through [commitlint](https://commitlint.js.org/) with `@commitlint/config-conventional`.
 - **GitHub Actions:**
@@ -22,7 +22,7 @@ Opt-in via flags in [`cookiecutter.json`](cookiecutter.json):
 | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `with_build=true`        | `Release` + `Release PR` workflows — build & push images to GHCR; PR builds get a Trivy scan whose results are posted as a sticky PR comment.                                                                                                               |
 | `with_docker=true`       | `docker/` subfolder with its own mise tasks and a base/dev/CI compose layering for auxiliary containers used in CI.                                                                                                                                         |
-| `with_python=true`       | Python + Poetry in `mise.toml`; Pyright wired into devDependencies.                                                                                                                                                                                         |
+| `with_python=true`       | Python + uv in `mise.toml`; Pyright wired into devDependencies.                                                                                                                                                                                             |
 | `with_zizmor=true`       | [Zizmor](https://woodruffw.github.io/zizmor/) in `mise.toml`, GHA security scan integrated into `mise run lint`.                                                                                                                                            |
 | `with_gitleaks=true`     | [Gitleaks](https://github.com/gitleaks/gitleaks) in `mise.toml`, secret scan of git history integrated into `mise run lint`.                                                                                                                                |
 | `with_trivy=true`        | Trivy in `mise.toml` (used by the image scan in `Release PR`).                                                                                                                                                                                              |
@@ -39,7 +39,7 @@ Project-specific tasks go into `mise-tasks/` as file tasks, which the template n
 
 `mise run clean` removes the whole `artifacts/` folder, worktrees included, and prunes them: uncommitted work in a worktree there is lost.
 
-Upgrading `.scripts` from its own Python 3.12 pin: run `mise run clean`, `mise run lint-fix` and `mise run init` after the first update, which relocks it for secret-transfer 0.5; later updates relock it themselves.
+The optional `.scripts` project uses `uv.lock`. Template updates relock it for the rendered Python version, and `mise run init` installs its locked dependencies.
 
 Upgrading a repository generated with Taskfile: `update-from-template` removes the template's own Taskfiles, but each service's `Taskfile.yaml` has to be ported to its `mise.toml` by hand, in the same change, since `task` is no longer installed.
 

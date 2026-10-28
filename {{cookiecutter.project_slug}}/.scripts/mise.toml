@@ -2,22 +2,21 @@
 description = "Initialize environment"
 run = [
   "echo 'Installing python dependencies...'",
-  "poetry install --no-root",
+  "uv sync --locked --no-install-project",
 ]
 
 [tasks.lint]
 description = "Lint"
 run = [
-  "echo 'Running poetry checks...'",
-  "poetry check --lock",
+  "echo 'Checking uv lockfile...'",
+  "uv lock --check",
 ]
 
 [tasks.lint-fix]
 description = "Lint fix"
 run = [
-  "echo 'Running poetry autofixes...'",
-  "poetry lock",
-  "poetry check",
+  "echo 'Updating uv lockfile...'",
+  "uv lock",
 ]
 
 [tasks.clean]
@@ -31,12 +30,13 @@ run = [
 description = "Update dependencies"
 run = [
   "echo 'Updating python dependencies...'",
-  "poetry update",
+  "uv lock --upgrade",
+  "uv sync --locked --no-install-project",
 ]
 
 [tasks.dependencies-check]
 description = "Check dependencies"
 run = [
   "echo 'Checking python dependencies...'",
-  "poetry show --outdated",
+  "uv tree --outdated --locked",
 ]

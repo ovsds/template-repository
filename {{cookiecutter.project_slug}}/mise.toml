@@ -35,9 +35,6 @@ node = "{{ cookiecutter.node_version.lstrip('v') }}"
 uv = "0.13.1"
 python = "{{ cookiecutter.python_version }}"
 {%- endif %}
-{%- if cookiecutter.with_python == 'true' or cookiecutter.scripts == 'true' %}
-"pypi:poetry" = "2.5.1"
-{%- endif %}
 {%- if cookiecutter.with_cookiecutter == 'true' %}
 "pypi:cookiecutter" = "2.7.1"
 {%- endif %}
@@ -188,7 +185,7 @@ run = [
 
   "echo 'Relocking .scripts for the rendered pyproject.toml...'",
   "rm -rf .scripts/.venv",
-  "cd .scripts && mise exec -- poetry lock",
+  "cd .scripts && mise exec -- uv lock",
 {%- endif %}
 ]
 {%- if cookiecutter.with_build == 'true' %}
