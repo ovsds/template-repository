@@ -15,13 +15,6 @@
       }
     },
     {
-      "name": "Scripts Python 3.14",
-      "parameters": {
-        "scripts": "true",
-        "python_version": "3.14.8"
-      }
-    },
-    {
       "name": "Services",
       "parameters": {
         "services": "service1 service2"
