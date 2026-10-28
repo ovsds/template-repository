@@ -32,4 +32,6 @@ if __name__ == "__main__":
     remove_file("Taskfile.yaml", missing_ok=True)
     remove_file(".scripts/Taskfile.yaml", missing_ok=True)
     remove_file(".scripts/.python-version", missing_ok=True)
+    remove_file(".scripts/poetry.lock", missing_ok=True)
+    remove_file(".scripts/poetry.toml", missing_ok=True)
     remove_file("docker/Taskfile.yaml", missing_ok=True)

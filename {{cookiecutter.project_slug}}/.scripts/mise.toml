@@ -1,6 +1,9 @@
 [tasks.init]
 description = "Initialize environment"
 run = [
+  "echo 'Locking python dependencies...'",
+  "if [ ! -f uv.lock ]; then uv lock; fi",
+
   "echo 'Installing python dependencies...'",
   "uv sync --locked --no-install-project",
 ]

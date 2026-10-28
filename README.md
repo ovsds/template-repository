@@ -39,7 +39,7 @@ Project-specific tasks go into `mise-tasks/` as file tasks, which the template n
 
 `mise run clean` removes the whole `artifacts/` folder, worktrees included, and prunes them: uncommitted work in a worktree there is lost.
 
-The optional `.scripts` project uses `uv.lock`. Template updates relock it for the rendered Python version, and `mise run init` installs its locked dependencies.
+The optional `.scripts` project generates `uv.lock` during `mise run init`. Template updates relock it for the rendered Python version, then `mise run init` installs its locked dependencies.
 
 Upgrading a repository generated with Taskfile: `update-from-template` removes the template's own Taskfiles, but each service's `Taskfile.yaml` has to be ported to its `mise.toml` by hand, in the same change, since `task` is no longer installed.
 

@@ -1,6 +1,6 @@
 [project]
 authors = [{ name = "{{cookiecutter.owner_name}}", email = "{{cookiecutter.owner_email}}" }]
-dependencies = ["secret-transfer (>=0.5.0,<0.6.0)"]
+dependencies = ["secret-transfer>=0.5.0,<0.6.0"]
 description = "Scripts"
 name = "scripts"
 requires-python = ">={{ cookiecutter.__python_minor }}"
