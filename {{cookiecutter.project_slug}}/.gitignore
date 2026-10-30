@@ -7,6 +7,13 @@
 
 # Dependencies
 node_modules/
+{%- if cookiecutter.with_python == 'true' or cookiecutter.scripts == 'true' %}
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.coverage
+{%- endif %}
 
 # Environment
 .env

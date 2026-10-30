@@ -76,7 +76,7 @@ run = [
 {%- if cookiecutter.with_zizmor == 'true' %}
 
   "echo 'Running GHA checks...'",
-  'GH_TOKEN="$(gh auth token)" zizmor .',
+  'GH_TOKEN="${GH_TOKEN:-$(gh auth token)}" zizmor .',
 {%- endif %}
 {%- if cookiecutter.with_gitleaks == 'true' %}
 
@@ -94,7 +94,7 @@ run = [
 {%- if cookiecutter.with_zizmor == 'true' %}
 
   "echo 'Running GHA checks...'",
-  'GH_TOKEN="$(gh auth token)" zizmor .',
+  'GH_TOKEN="${GH_TOKEN:-$(gh auth token)}" zizmor .',
 {%- endif %}
 {%- if cookiecutter.with_gitleaks == 'true' %}
 

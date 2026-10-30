@@ -8,10 +8,6 @@
     "lint-staged": "^17.6.0",
     "prettier": "^3.9.10"
   },
-  "hooks": {
-    "pre-commit": "lint-staged",
-    "commit-msg": "commitlint"
-  },
   "lint-staged": {
     "*.{md,yaml,json,js}": [
       "prettier --check"
