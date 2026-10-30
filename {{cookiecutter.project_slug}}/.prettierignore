@@ -1,5 +1,6 @@
 # Environment variables
 .env
+/artifacts/
 {%- if cookiecutter.with_python == 'true' or cookiecutter.scripts == 'true' %}
 
 # Python Dependencies

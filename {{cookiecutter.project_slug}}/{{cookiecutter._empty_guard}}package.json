@@ -9,10 +9,6 @@
     "prettier": "^3.9.10"{% if cookiecutter.with_python == "true" %},
     "pyright": "^1.1.414"{% endif %}
   },
-  "hooks": {
-    "pre-commit": "lint-staged",
-    "commit-msg": "commitlint"
-  },
   "lint-staged": {
     "*.{md,yaml,json,js}": [
       "prettier --check"

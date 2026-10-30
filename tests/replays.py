@@ -1,3 +1,4 @@
+import json
 import os
 import shlex
 
@@ -8,6 +9,35 @@ MANIFEST_PATH = "tests/replays.json"
 ADDITIONAL_FILES_PATH = "tests/additional_files"
 RESULTS_PATH = ".test_results"
 NODE_BIN_PATH = "node_modules/.bin"
+AGENT_SKILLS_PATHS = [
+    "mise.toml",
+    ".github/workflows/check-pr.yaml",
+    ".gitignore",
+    ".prettierignore",
+    "package.json",
+]
+
+
+def assert_agent_skills_baseline(cwd: str):
+    with open(f"{cwd}/.github/workflows/check-pr.yaml", encoding="utf-8") as file:
+        workflow = file.read()
+    assert "  push:\n    branches:\n      - main\n" in workflow
+    assert "  workflow_dispatch:\n" in workflow
+    assert "github.event.number || github.sha" in workflow
+
+    with open(f"{cwd}/mise.toml", encoding="utf-8") as file:
+        mise = file.read()
+    assert mise.count('GH_TOKEN="${GH_TOKEN:-$(gh auth token)}" zizmor .') == 2
+
+    for ignore_path in [".gitignore", ".prettierignore"]:
+        with open(f"{cwd}/{ignore_path}", encoding="utf-8") as file:
+            ignore = file.read()
+        for pattern in ["/artifacts/", ".venv/", "__pycache__/", ".pytest_cache/", ".ruff_cache/", ".coverage"]:
+            assert pattern in ignore, f"{ignore_path} misses {pattern}"
+
+    with open(f"{cwd}/package.json", encoding="utf-8") as file:
+        package = json.load(file)
+    assert "hooks" not in package
 
 
 def test_replay(replay: replay_utils.Replay):
@@ -27,8 +57,9 @@ def test_replay(replay: replay_utils.Replay):
         assert os.path.exists(f"{cwd}/.scripts/uv.lock"), "mise init did not create a uv lockfile"
     cli_utils.run_command("mise run lint", cwd=cwd)
     cli_utils.run_command("mise run lint-fix", cwd=cwd)
-    if "github_workflow_runs_on" in replay.parameters:
-        replay_paths = [f"{cwd}/mise.toml", f"{cwd}/.github/workflows/check-pr.yaml"]
+    if replay.name == "Agent Skills":
+        assert_agent_skills_baseline(cwd)
+        replay_paths = [f"{cwd}/{path}" for path in AGENT_SKILLS_PATHS]
         replay_contents = {}
         for path in replay_paths:
             with open(path, encoding="utf-8") as file:

@@ -65,6 +65,19 @@
       }
     },
     {
+      "name": "Agent Skills",
+      "parameters": {
+        "project_name": "agent-skills",
+        "project_slug": "agent-skills",
+        "node_version": "v22.22.1",
+        "python_version": "3.10.19",
+        "github_workflow_runs_on": "{% raw %}${{ vars.RUNNER_NAME || 'ubuntu-latest' }}{% endraw %}",
+        "with_python": "true",
+        "with_zizmor": "true",
+        "with_gitleaks": "true"
+      }
+    },
+    {
       "name": "With Docker",
       "parameters": {
         "with_docker": "true"
