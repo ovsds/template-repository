@@ -59,6 +59,12 @@
       }
     },
     {
+      "name": "Runner Expression",
+      "parameters": {
+        "github_workflow_runs_on": "{% raw %}${{ vars.RUNNER_NAME || 'ubuntu-latest' }}{% endraw %}"
+      }
+    },
+    {
       "name": "With Docker",
       "parameters": {
         "with_docker": "true"
