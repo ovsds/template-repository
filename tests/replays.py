@@ -1,4 +1,5 @@
 import os
+import shlex
 
 import tests.utils.replay as replay_utils
 import tests.utils.cli as cli_utils
@@ -26,6 +27,17 @@ def test_replay(replay: replay_utils.Replay):
         assert os.path.exists(f"{cwd}/.scripts/uv.lock"), "mise init did not create a uv lockfile"
     cli_utils.run_command("mise run lint", cwd=cwd)
     cli_utils.run_command("mise run lint-fix", cwd=cwd)
+    if "github_workflow_runs_on" in replay.parameters:
+        replay_paths = [f"{cwd}/mise.toml", f"{cwd}/.github/workflows/check-pr.yaml"]
+        replay_contents = {}
+        for path in replay_paths:
+            with open(path, encoding="utf-8") as file:
+                replay_contents[path] = file.read()
+        template_path = shlex.quote(os.path.abspath("."))
+        cli_utils.run_command(f"TEMPLATE_PATH={template_path} mise run update-from-template", cwd=cwd)
+        for path in replay_paths:
+            with open(path, encoding="utf-8") as file:
+                assert file.read() == replay_contents[path], f"template update changed {path}"
     cli_utils.run_command("git worktree add --quiet --detach artifacts/worktrees/test", cwd=cwd)
     cli_utils.run_command("mise run clean", cwd=cwd)
     assert not os.path.exists(f"{cwd}/artifacts"), "mise run clean left artifacts/"

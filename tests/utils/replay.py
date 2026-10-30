@@ -1,5 +1,6 @@
 import dataclasses
 import os
+import shlex
 import shutil
 import typing
 
@@ -58,7 +59,7 @@ def read_replays(manifest_path: str) -> typing.Iterable[Replay]:
 
 def build_replay(replay: Replay, results_path: str = DEFAULT_RESULTS_PATH):
     print(f"{replay.name}: Building replay...")
-    extra_parameters = [f"{key}=\"{value}\"" for key, value in replay.parameters.items()]
+    extra_parameters = [shlex.quote(f"{key}={value}") for key, value in replay.parameters.items()]
     cli_utils.run_command(f"cookiecutter --output-dir {results_path} --no-input . {' '.join(extra_parameters)}")
 
 

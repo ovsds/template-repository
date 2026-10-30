@@ -8,6 +8,8 @@
 {%- endfor %}
 {%- endfor %}
 {%- set config_roots = (['.scripts'] if cookiecutter.scripts == 'true' else []) + services + (['docker'] if cookiecutter.with_docker == 'true' else []) %}
+{%- set mise_raw_open = "{{ '{% raw %}' }}" %}
+{%- set mise_raw_close = "{{ '{% endraw %}' }}" %}
 {%- macro fan_out(task, scripts_message='') %}
 {%- if scripts_message and cookiecutter.scripts == 'true' %}
 
@@ -165,7 +167,7 @@ run = [
     project_slug='{{cookiecutter.project_slug}}' \
     node_version='{{cookiecutter.node_version}}' \
     python_version='{{cookiecutter.python_version}}' \
-    github_workflow_runs_on='{{cookiecutter.github_workflow_runs_on}}' \
+    github_workflow_runs_on='{{mise_raw_open}}{{cookiecutter.github_workflow_runs_on | replace("'", "'\"'\"'") | replace("${{", "$'{'{")}}{{mise_raw_close}}' \
     owner_name='{{cookiecutter.owner_name}}' \
     owner_github_login='{{cookiecutter.owner_github_login}}' \
     scripts='{{cookiecutter.scripts}}' \
