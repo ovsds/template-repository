@@ -47,6 +47,9 @@ def test_replay(replay: replay_utils.Replay):
     cwd = f"{RESULTS_PATH}/{replay.parameters['project_slug']}"
     replay_utils.copy_additional_files(replay, ADDITIONAL_FILES_PATH, cwd)
 
+    with open(f"{cwd}/.husky/commit-msg", encoding="utf-8") as file:
+        assert 'commitlint --edit "$1"' in file.read(), "commit-msg hook ignores the message file git passes"
+
     cli_utils.run_command("git init", cwd=cwd)
     cli_utils.run_command("git add --all", cwd=cwd)
     cli_utils.run_command("git -c user.name=test -c user.email=test@example.com -c commit.gpgsign=false commit --quiet --no-verify -m init", cwd=cwd)
